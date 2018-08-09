@@ -24,6 +24,7 @@ import MembershipOverview from './MembershipOverview'
 import EventLog from './EventLog'
 import Notepad from './Notepad'
 import SessionOverview from './SessionOverview'
+import AuthInfo from './AuthInfo'
 
 const GUTTER = 60
 const styles = {
@@ -268,6 +269,9 @@ class Detail extends Component {
                       onRemove={this.safe(
                         props.removeUserFromRole
                       )}
+                    />
+                    <AuthInfo
+                      user={props.data.user}
                     />
                   </div>
                 </div>
@@ -587,6 +591,8 @@ const userQuery = gql`
       }
       createdAt
       updatedAt
+      enabledFirstFactors
+      preferredFirstFactor
       statement
       portrait(size: SMALL)
       roles
