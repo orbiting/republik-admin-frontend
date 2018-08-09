@@ -11,6 +11,12 @@ import {
 } from '@project-r/styleguide'
 import List, { Item } from '../../List'
 
+import { swissTime } from '../../../lib/utils/formats'
+
+const dateTimeFormat = swissTime.format(
+  '%e. %B %Y %H.%M Uhr'
+)
+
 const sessionQuery = gql`
   query user($id: String) {
     user(slug: $id) {
@@ -23,6 +29,16 @@ const sessionQuery = gql`
         countryFlag
         ipAddress
         userAgent
+        device {
+          id
+          lastSeen
+          information {
+            os
+            model
+            osVersion
+            appVersion
+          }
+        }
       }
     }
   }
@@ -50,6 +66,10 @@ const styles = {
   session: css({
     padding: 10,
     backgroundColor: colors.secondaryBg
+  }),
+  section: css({ margin: '0 0 10px 0' }),
+  blockLabel: css({
+    display: 'block'
   })
 }
 
@@ -62,31 +82,77 @@ class SessionOverview extends Component {
       []
     return (
       <List>
-        {sessions.map((session, index) => (
-          <Item key={`session-${index}`}>
-            <div {...styles.session}>
-              <Label>
-                {session.id} {session.expiresAt}
-              </Label>
-              <Interaction.P>
-                {session.city} {session.country}
-              </Interaction.P>
-              <Interaction.P>
-                {session.userAgent}
-              </Interaction.P>
-              <Button
-                onClick={() => {
-                  this.props.clearSession({
-                    userId: this.props.user.id,
-                    sessionId: session.id
-                  })
-                }}
-              >
-                Clear Session
-              </Button>
-            </div>
-          </Item>
-        ))}
+        {sessions.map((session, index) => {
+          const { device } = session
+          const { information } = device || {}
+          return (
+            <Item key={`session-${index}`}>
+              <div {...styles.session}>
+                <Interaction.P
+                  {...styles.section}
+                >
+                  <Label {...styles.blockLabel}>
+                    Session
+                  </Label>
+                  {session.userAgent}
+                  <Label {...styles.blockLabel}>
+                    Ablaufdatum:{' '}
+                    {dateTimeFormat(
+                      new Date(session.expiresAt)
+                    )}
+                  </Label>
+
+                  {session.city &&
+                    session.country && (
+                      <Label
+                        {...styles.blockLabel}
+                      >
+                        Ort: {session.city}{' '}
+                        {session.country}
+                      </Label>
+                    )}
+                </Interaction.P>
+
+                {device && (
+                  <Interaction.P
+                    {...styles.section}
+                  >
+                    <Label {...styles.blockLabel}>
+                      Gerät
+                    </Label>
+                    {information.model}{' '}
+                    {information.os}
+                    <Label {...styles.blockLabel}>
+                      App-Version:{' '}
+                      {information.appVersion}
+                    </Label>
+                    <Label {...styles.blockLabel}>
+                      OS-Version:{' '}
+                      {information.osVersion}
+                    </Label>
+                    <Label {...styles.blockLabel}>
+                      Zuletzt atktiv:{' '}
+                      {dateTimeFormat(
+                        new Date(device.lastSeen)
+                      )}
+                    </Label>
+                  </Interaction.P>
+                )}
+
+                <Button
+                  onClick={() => {
+                    this.props.clearSession({
+                      userId: this.props.user.id,
+                      sessionId: session.id
+                    })
+                  }}
+                >
+                  Clear Session
+                </Button>
+              </div>
+            </Item>
+          )
+        })}
         <Button
           disabled={sessions.length === 0}
           onClick={() => {
