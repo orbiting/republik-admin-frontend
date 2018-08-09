@@ -13,16 +13,18 @@ const RolesForm = ({ user }) => {
       <p>
         <Label>Aktivierte Login-Methoden</Label>
         <br />
-        {user.enabledFirstFactors.map(v =>
-          v
-            .split('_')
-            .map(
-              word =>
-                word.slice(0, 1).toUpperCase() +
-                word.slice(1).toLowerCase()
-            )
-            .join(' ')
-        )}
+        {user.enabledFirstFactors
+          .map(v =>
+            v
+              .split('_')
+              .map(
+                word =>
+                  word.slice(0, 1).toUpperCase() +
+                  word.slice(1).toLowerCase()
+              )
+              .join(' ')
+          )
+          .join('\n')}
       </p>
       <p>
         <Label>Bervorzugte Login-Methode</Label>

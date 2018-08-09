@@ -258,6 +258,9 @@ class Detail extends Component {
                         <br />
                       </div>
                     )}
+                    <AuthInfo
+                      user={props.data.user}
+                    />
                     <NewsletterForm
                       user={props.data.user}
                     />
@@ -269,10 +272,7 @@ class Detail extends Component {
                       onRemove={this.safe(
                         props.removeUserFromRole
                       )}
-                    />
-                    <AuthInfo
-                      user={props.data.user}
-                    />
+                    />{' '}
                   </div>
                 </div>
               </Tab>
