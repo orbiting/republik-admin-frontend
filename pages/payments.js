@@ -1,5 +1,4 @@
 import React from 'react'
-import withData from '../lib/withData'
 import App from '../components/App'
 import {
   Body,
@@ -13,7 +12,7 @@ const changeHandler = params => {
   Router.pushRoute('payments', params)
 }
 
-export default withData(props => {
+export default props => {
   return (
     <App>
       <Body>
@@ -27,4 +26,4 @@ export default withData(props => {
       </Body>
     </App>
   )
-})
+}

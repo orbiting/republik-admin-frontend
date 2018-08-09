@@ -1,5 +1,4 @@
 import React from 'react'
-import withData from '../lib/withData'
 import App from '../components/App'
 import {
   Body,
@@ -8,7 +7,7 @@ import {
 } from '../components/Layout'
 import User from '../components/Users/Detail'
 
-export default withData(props => {
+export default props => {
   return (
     <App>
       <Body>
@@ -19,4 +18,4 @@ export default withData(props => {
       </Body>
     </App>
   )
-})
+}

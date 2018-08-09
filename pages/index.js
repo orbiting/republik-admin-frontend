@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
 import { css } from 'glamor'
-import withData from '../lib/withData'
 import withMe from '../lib/withMe'
 import App from '../components/App'
 import SignIn from '../components/Auth/SignIn'
@@ -62,4 +61,4 @@ class Index extends Component {
   }
 }
 
-export default withData(withMe(Index))
+export default withMe(Index)
