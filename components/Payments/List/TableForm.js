@@ -7,9 +7,7 @@ import StringArray from '../../Form/StringArray'
 
 import CSVDownloader from './CsvDownloader'
 
-const searchHandler = (
-  handler: (value: string) => void
-) => event => {
+const searchHandler = handler => event => {
   handler(event.target.value)
 }
 

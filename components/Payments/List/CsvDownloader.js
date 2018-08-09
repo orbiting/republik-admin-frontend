@@ -29,7 +29,7 @@ const query = gql`
 `
 
 class CSVDownloader extends Component {
-  constructor(props: { client: ApolloClient }) {
+  constructor(props) {
     super(props)
     this.state = {
       csv: null,
@@ -39,7 +39,7 @@ class CSVDownloader extends Component {
     }
   }
 
-  setCompany = (event: { target: { value: string } }) => {
+  setCompany = event => {
     const companyName = event.target.value
     this.setState(() => ({
       companyName: companyName
@@ -81,7 +81,9 @@ class CSVDownloader extends Component {
 
   render() {
     if (this.state.error) {
-      return <ErrorMessage error={this.state.error} />
+      return (
+        <ErrorMessage error={this.state.error} />
+      )
     }
     if (!this.state.csv) {
       if (this.state.loading) {
@@ -94,11 +96,13 @@ class CSVDownloader extends Component {
               value={this.state.companyName}
               onChange={this.setCompany}
             >
-              {companies.map(({ name, label }) => (
-                <option key={name} value={name}>
-                  {label}
-                </option>
-              ))}
+              {companies.map(
+                ({ name, label }) => (
+                  <option key={name} value={name}>
+                    {label}
+                  </option>
+                )
+              )}
             </select>
             <button
               style={{ cursor: 'pointer' }}

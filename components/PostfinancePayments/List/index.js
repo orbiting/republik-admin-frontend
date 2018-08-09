@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
-import { compose } from 'redux'
+import { compose } from 'react-apollo'
 import InfiniteScroller from 'react-infinite-scroller'
 import DateRange from '../../Form/DateRange'
 import Bool from '../../Form/Boolean'
@@ -21,8 +21,8 @@ const PAYMENTS_LIMIT = 200
 const identity = v => v
 
 const createChangeHandler = (params, handler) => (
-  fieldName: string,
-  serializer?
+  fieldName,
+  serializer
 ) => value => {
   const s = serializer || identity
   if (value && value !== '') {
@@ -82,7 +82,9 @@ class PostfinancePayments extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.state = getInitialState(nextProps)
+    this.setState(() =>
+      getInitialState(nextProps)
+    )
   }
 
   render() {
@@ -92,10 +94,14 @@ class PostfinancePayments extends Component {
         return (
           <div>
             {props.data.error && (
-              <ErrorMessage error={props.data.error} />
+              <ErrorMessage
+                error={props.data.error}
+              />
             )}
             {this.state.error && (
-              <ErrorMessage error={this.state.error} />
+              <ErrorMessage
+                error={this.state.error}
+              />
             )}
           </div>
         )
@@ -135,28 +141,39 @@ class PostfinancePayments extends Component {
           <TableForm
             search={params.search}
             onSearch={changeHandler('search')}
-            dateRange={DateRange.parse(params.dateRange)}
+            dateRange={DateRange.parse(
+              params.dateRange
+            )}
             onDateRange={changeHandler(
               'dateRange',
               DateRange.serialize
             )}
             bool={Bool.parse(params.bool)}
-            onBool={changeHandler('bool', Bool.serialize)}
+            onBool={changeHandler(
+              'bool',
+              Bool.serialize
+            )}
             onUpload={this.uploadHandler}
             onRematch={this.rematchHandler}
           />
           <TableHead
-            sort={deserializeOrderBy(params.orderBy)}
+            sort={deserializeOrderBy(
+              params.orderBy
+            )}
             onSort={changeHandler(
               'orderBy',
               serializeOrderBy
             )}
           />
           <TableBody
-            items={props.data.postfinancePayments.items}
+            items={
+              props.data.postfinancePayments.items
+            }
             onMessage={updatePostfinancePayment}
             onHide={hidePostfinancePayment}
-            onMatch={manuallyMatchPostfinancePayment}
+            onMatch={
+              manuallyMatchPostfinancePayment
+            }
           />
         </div>
       </InfiniteScroller>
@@ -235,7 +252,9 @@ const hidePostfinancePaymentMutation = gql`
 `
 
 const manuallyMatchPostfinancePaymentMutation = gql`
-  mutation manuallyMatchPostfinancePayment($id: ID!) {
+  mutation manuallyMatchPostfinancePayment(
+    $id: ID!
+  ) {
     manuallyMatchPostfinancePayment(id: $id) {
       id
       hidden
@@ -264,11 +283,15 @@ export default compose(
         data,
         loadMorePayments: () => {
           if (!data) {
-            throw new Error('data object undefined')
+            throw new Error(
+              'data object undefined'
+            )
           }
           return data.fetchMore({
             variables: {
-              offset: data.postfinancePayments.items.length
+              offset:
+                data.postfinancePayments.items
+                  .length
             },
             updateQuery: (
               previousResult,
@@ -284,10 +307,11 @@ export default compose(
                     ...previousResult.postfinancePayments,
                     ...fetchMoreResult.postfinancePayments,
                     items: [
-                      ...previousResult.postfinancePayments
+                      ...previousResult
+                        .postfinancePayments
                         .items,
-                      ...fetchMoreResult.postfinancePayments
-                        .items
+                      ...fetchMoreResult
+                        .postfinancePayments.items
                     ]
                   }
                 }
@@ -302,10 +326,18 @@ export default compose(
     props: ({
       mutate,
       ownProps: {
-        params: { orderBy, search, dateRange, bool }
+        params: {
+          orderBy,
+          search,
+          dateRange,
+          bool
+        }
       }
     }) => ({
-      updatePostfinancePayment: ({ id, message }) => {
+      updatePostfinancePayment: ({
+        id,
+        message
+      }) => {
         if (mutate) {
           return mutate({
             variables: { id, message },
@@ -315,8 +347,12 @@ export default compose(
                 variables: {
                   limit: PAYMENTS_LIMIT,
                   offset: 0,
-                  orderBy: deserializeOrderBy(orderBy),
-                  dateRange: DateRange.parse(dateRange),
+                  orderBy: deserializeOrderBy(
+                    orderBy
+                  ),
+                  dateRange: DateRange.parse(
+                    dateRange
+                  ),
                   bool: Bool.parse(bool),
                   search
                 }
@@ -342,7 +378,12 @@ export default compose(
     props: ({
       mutate,
       ownProps: {
-        params: { orderBy, search, dateRange, bool }
+        params: {
+          orderBy,
+          search,
+          dateRange,
+          bool
+        }
       }
     }) => ({
       hidePostfinancePayment: ({ id }) => {
@@ -355,8 +396,12 @@ export default compose(
                 variables: {
                   limit: PAYMENTS_LIMIT,
                   offset: 0,
-                  orderBy: deserializeOrderBy(orderBy),
-                  dateRange: DateRange.parse(dateRange),
+                  orderBy: deserializeOrderBy(
+                    orderBy
+                  ),
+                  dateRange: DateRange.parse(
+                    dateRange
+                  ),
                   bool: Bool.parse(bool),
                   search
                 }
@@ -367,40 +412,59 @@ export default compose(
       }
     })
   }),
-  graphql(manuallyMatchPostfinancePaymentMutation, {
-    props: ({
-      mutate,
-      ownProps: {
-        params: { orderBy, search, dateRange, bool }
-      }
-    }) => ({
-      manuallyMatchPostfinancePayment: ({ id }) => {
-        if (mutate) {
-          return mutate({
-            variables: { id },
-            refetchQueries: [
-              {
-                query: postfinancePaymentsQuery,
-                variables: {
-                  limit: PAYMENTS_LIMIT,
-                  offset: 0,
-                  orderBy: deserializeOrderBy(orderBy),
-                  dateRange: DateRange.parse(dateRange),
-                  bool: Bool.parse(bool),
-                  search
-                }
-              }
-            ]
-          })
+  graphql(
+    manuallyMatchPostfinancePaymentMutation,
+    {
+      props: ({
+        mutate,
+        ownProps: {
+          params: {
+            orderBy,
+            search,
+            dateRange,
+            bool
+          }
         }
-      }
-    })
-  }),
+      }) => ({
+        manuallyMatchPostfinancePayment: ({
+          id
+        }) => {
+          if (mutate) {
+            return mutate({
+              variables: { id },
+              refetchQueries: [
+                {
+                  query: postfinancePaymentsQuery,
+                  variables: {
+                    limit: PAYMENTS_LIMIT,
+                    offset: 0,
+                    orderBy: deserializeOrderBy(
+                      orderBy
+                    ),
+                    dateRange: DateRange.parse(
+                      dateRange
+                    ),
+                    bool: Bool.parse(bool),
+                    search
+                  }
+                }
+              ]
+            })
+          }
+        }
+      })
+    }
+  ),
   graphql(rematchMutation, {
     props: ({
       mutate,
       ownProps: {
-        params: { orderBy, search, dateRange, bool }
+        params: {
+          orderBy,
+          search,
+          dateRange,
+          bool
+        }
       }
     }) => ({
       rematchPayments: () => {
@@ -412,8 +476,12 @@ export default compose(
                 variables: {
                   limit: PAYMENTS_LIMIT,
                   offset: 0,
-                  orderBy: deserializeOrderBy(orderBy),
-                  dateRange: DateRange.parse(dateRange),
+                  orderBy: deserializeOrderBy(
+                    orderBy
+                  ),
+                  dateRange: DateRange.parse(
+                    dateRange
+                  ),
                   bool: Bool.parse(bool),
                   search
                 }

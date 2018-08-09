@@ -7,9 +7,7 @@ import DateRange from '../../Form/DateRange'
 import Boolean from '../../Form/Boolean'
 import UploadForm from './UploadForm'
 
-const searchHandler = (
-  handler: (value: string) => void
-) => event => {
+const searchHandler = handler => event => {
   handler(event.target.value)
 }
 

@@ -3,9 +3,7 @@ import { colors } from '@project-r/styleguide'
 import Input from '../../Form/Input'
 import DateRange from '../../Form/DateRange'
 
-const searchHandler = (
-  handler: (value: string) => void
-) => event => {
+const searchHandler = handler => event => {
   handler(event.target.value)
 }
 

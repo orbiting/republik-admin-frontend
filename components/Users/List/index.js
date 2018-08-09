@@ -20,11 +20,15 @@ const USERS_LIMIT = 200
 const identity = v => v
 
 const createChangeHandler = (params, handler) => (
-  fieldName: string,
-  serializer?
+  fieldName,
+  serializer
 ) => value => {
   const s = serializer || identity
-  if (value && value !== '' && Object.keys(value)) {
+  if (
+    value &&
+    value !== '' &&
+    Object.keys(value)
+  ) {
     handler({
       ...params,
       ...{ [fieldName]: s(value) }
@@ -37,7 +41,9 @@ const createChangeHandler = (params, handler) => (
 
 const Users = props => {
   if (props.data.error) {
-    return <ErrorMessage error={props.data.error} />
+    return (
+      <ErrorMessage error={props.data.error} />
+    )
   } else if (!props.data.users) {
     return <div>Loading</div>
   }
@@ -70,7 +76,9 @@ const Users = props => {
           )}
         />
         <TableHead
-          sort={deserializeOrderBy(params.orderBy)}
+          sort={deserializeOrderBy(
+            params.orderBy
+          )}
           onSort={changeHandler(
             'orderBy',
             serializeOrderBy
@@ -112,7 +120,9 @@ const usersQuery = gql`
 `
 
 export default graphql(usersQuery, {
-  options: ({ params: { orderBy, dateRange, search } }) => {
+  options: ({
+    params: { orderBy, dateRange, search }
+  }) => {
     return {
       variables: {
         limit: USERS_LIMIT,

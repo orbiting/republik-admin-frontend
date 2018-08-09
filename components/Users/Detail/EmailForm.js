@@ -1,12 +1,17 @@
 import React, { Component } from 'react'
-import { Field, Button } from '@project-r/styleguide'
+import {
+  Field,
+  Button
+} from '@project-r/styleguide'
 import { validate as isEmail } from 'email-validator'
 import { errorToString } from '../../../lib/utils/errors'
 
 const getInitialState = props => ({
   user: props.user,
   isDirty: false,
-  error: props.error ? errorToString(props.error) : false
+  error: props.error
+    ? errorToString(props.error)
+    : false
 })
 
 export default class EmailForm extends Component {
@@ -15,7 +20,7 @@ export default class EmailForm extends Component {
     this.state = getInitialState(props)
   }
 
-  emailChangeHandler = (event, value: string) =>
+  emailChangeHandler = (event, value) =>
     this.setState(() => ({
       isDirty: true,
       user: {
@@ -29,7 +34,7 @@ export default class EmailForm extends Component {
           `That's not a valid email address.`)
     }))
 
-  submitHandler = onSubmit => (event): void => {
+  submitHandler = onSubmit => event => {
     event.preventDefault()
     const { user } = this.state
     if (
@@ -45,7 +50,9 @@ export default class EmailForm extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(() => getInitialState(nextProps))
+    this.setState(() =>
+      getInitialState(nextProps)
+    )
   }
 
   render() {
@@ -57,7 +64,9 @@ export default class EmailForm extends Component {
     const { email } = user
 
     return (
-      <form onSubmit={this.submitHandler(onSubmit)}>
+      <form
+        onSubmit={this.submitHandler(onSubmit)}
+      >
         <Field
           error={this.state.error}
           value={email}
@@ -67,7 +76,10 @@ export default class EmailForm extends Component {
         <Button
           primary
           type="submit"
-          disabled={!this.state.isDirty || this.state.error}
+          disabled={
+            !this.state.isDirty ||
+            this.state.error
+          }
         >
           ändern
         </Button>

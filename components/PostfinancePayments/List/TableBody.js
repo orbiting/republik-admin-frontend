@@ -20,13 +20,13 @@ const link = css({
   }
 })
 
-const displayDate = (rawDate: string): string => {
-  const date: Date = new Date(rawDate)
+const displayDate = rawDate => {
+  const date = new Date(rawDate)
   return `${date.getDate()}.${date.getMonth() +
     1}.${date.getFullYear()}`
 }
 
-const rowStyles = (index: number) => ({
+const rowStyles = index => ({
   maxHeight: '230px',
   padding: '10px 0',
   backgroundColor:
@@ -49,85 +49,82 @@ export default ({
       .filter(v => {
         return v.hidden !== true
       })
-      .map(
-        (postfinancePayment, index: number) => (
-          <Row
-            key={`postfinancePayment-${index}`}
-            style={rowStyles(index)}
+      .map((postfinancePayment, index) => (
+        <Row
+          key={`postfinancePayment-${index}`}
+          style={rowStyles(index)}
+        >
+          <Cell flex="0 0 10%">
+            {postfinancePayment.buchungsdatum}
+          </Cell>
+          <Cell flex="0 0 10%">
+            {postfinancePayment.valuta}
+          </Cell>
+          <Cell
+            flex="0 0 30%"
+            style={{ paddingRight: '10px' }}
           >
-            <Cell flex="0 0 10%">
-              {postfinancePayment.buchungsdatum}
-            </Cell>
-            <Cell flex="0 0 10%">
-              {postfinancePayment.valuta}
-            </Cell>
-            <Cell
-              flex="0 0 30%"
-              style={{ paddingRight: '10px' }}
-            >
-              {postfinancePayment.avisierungstext}
-            </Cell>
-            <Cell flex="0 0 10%">
-              {chfFormat(
-                postfinancePayment.gutschrift /
-                  100
-              )}
-            </Cell>
-            <Cell flex="0 0 10%">
-              {!postfinancePayment.matched ? (
-                <MessageForm
-                  message={
-                    postfinancePayment.mitteilung
-                  }
-                  onSubmit={(message: string) =>
-                    onMessage({
-                      id: postfinancePayment.id,
-                      message
-                    })
-                  }
-                />
-              ) : (
-                postfinancePayment.mitteilung
-              )}
-            </Cell>
-            <Cell flex="0 0 10%">
-              {postfinancePayment.matched
-                ? 'Yes'
-                : 'No'}
-            </Cell>
-            <Cell flex="0 0 10%">
-              {displayDate(
-                postfinancePayment.createdAt
-              )}
-            </Cell>
-            {!postfinancePayment.matched && (
-              <Cell flex="0 0 5%">
-                <a
-                  className={`${link}`}
-                  style={interactiveStyles}
-                  onClick={() =>
-                    onHide({
-                      id: postfinancePayment.id
-                    })
-                  }
-                >
-                  Verstecken
-                </a>
-                <a
-                  className={`${link}`}
-                  style={interactiveStyles}
-                  onClick={() =>
-                    onMatch({
-                      id: postfinancePayment.id
-                    })
-                  }
-                >
-                  Matchen
-                </a>
-              </Cell>
+            {postfinancePayment.avisierungstext}
+          </Cell>
+          <Cell flex="0 0 10%">
+            {chfFormat(
+              postfinancePayment.gutschrift / 100
             )}
-          </Row>
-        )
-      )}
+          </Cell>
+          <Cell flex="0 0 10%">
+            {!postfinancePayment.matched ? (
+              <MessageForm
+                message={
+                  postfinancePayment.mitteilung
+                }
+                onSubmit={message =>
+                  onMessage({
+                    id: postfinancePayment.id,
+                    message
+                  })
+                }
+              />
+            ) : (
+              postfinancePayment.mitteilung
+            )}
+          </Cell>
+          <Cell flex="0 0 10%">
+            {postfinancePayment.matched
+              ? 'Yes'
+              : 'No'}
+          </Cell>
+          <Cell flex="0 0 10%">
+            {displayDate(
+              postfinancePayment.createdAt
+            )}
+          </Cell>
+          {!postfinancePayment.matched && (
+            <Cell flex="0 0 5%">
+              <a
+                className={`${link}`}
+                style={interactiveStyles}
+                onClick={() =>
+                  onHide({
+                    id: postfinancePayment.id
+                  })
+                }
+              >
+                Verstecken
+              </a>
+              <a
+                className={`${link}`}
+                style={interactiveStyles}
+                onClick={() =>
+                  onMatch({
+                    id: postfinancePayment.id
+                  })
+                }
+              >
+                Matchen
+              </a>
+            </Cell>
+          )}
+        </Row>
+      ))}
   </Table>
 )

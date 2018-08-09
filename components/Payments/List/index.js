@@ -21,8 +21,8 @@ const PAYMENTS_LIMIT = 200
 const identity = v => v
 
 const createChangeHandler = (params, handler) => (
-  fieldName: string,
-  serializer?
+  fieldName,
+  serializer
 ) => value => {
   const s = serializer || identity
   if (value && value !== '') {
@@ -38,7 +38,9 @@ const createChangeHandler = (params, handler) => (
 
 const Payments = props => {
   if (props.data.error) {
-    return <ErrorMessage error={props.data.error} />
+    return (
+      <ErrorMessage error={props.data.error} />
+    )
   } else if (!props.data.payments) {
     return <div>Loading</div>
   }
@@ -65,8 +67,12 @@ const Payments = props => {
           search={params.search}
           companyName={params.companyName}
           onSearch={changeHandler('search')}
-          onSelectCompany={changeHandler('companyName')}
-          dateRange={DateRange.parse(params.dateRange)}
+          onSelectCompany={changeHandler(
+            'companyName'
+          )}
+          dateRange={DateRange.parse(
+            params.dateRange
+          )}
           onDateRange={changeHandler(
             'dateRange',
             DateRange.serialize
@@ -80,7 +86,9 @@ const Payments = props => {
           )}
         />
         <TableHead
-          sort={deserializeOrderBy(params.orderBy)}
+          sort={deserializeOrderBy(
+            params.orderBy
+          )}
           onSort={changeHandler(
             'orderBy',
             serializeOrderBy
@@ -130,7 +138,12 @@ const paymentsQuery = gql`
 
 export default graphql(paymentsQuery, {
   options: ({
-    params: { orderBy, search, dateRange, stringArray }
+    params: {
+      orderBy,
+      search,
+      dateRange,
+      stringArray
+    }
   }) => {
     return {
       variables: {
@@ -138,7 +151,9 @@ export default graphql(paymentsQuery, {
         offset: 0,
         orderBy: deserializeOrderBy(orderBy),
         dateRange: DateRange.parse(dateRange),
-        stringArray: StringArray.parse(stringArray),
+        stringArray: StringArray.parse(
+          stringArray
+        ),
         search
       }
     }
@@ -167,8 +182,10 @@ export default graphql(paymentsQuery, {
                 ...previousResult.payments,
                 ...fetchMoreResult.payments,
                 items: [
-                  ...previousResult.payments.items,
-                  ...fetchMoreResult.payments.items
+                  ...previousResult.payments
+                    .items,
+                  ...fetchMoreResult.payments
+                    .items
                 ]
               }
             }
