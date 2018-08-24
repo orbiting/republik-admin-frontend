@@ -5,19 +5,22 @@ import { compose } from 'react-apollo'
 
 import { ApolloProvider } from 'react-apollo'
 import withData from '../lib/withData'
+import { enforceAuthorization } from '../components/Auth/withAuthorization'
+const withAdminUser = enforceAuthorization(['supporter', 'admin', 'accountant'])
 
 class MyApp extends App {
-  render() {
+  render () {
     const {
       Component,
       pageProps,
       router,
       apolloClient
     } = this.props
+    const DecoratedComp = withAdminUser(Component)
     return (
       <Container>
         <ApolloProvider client={apolloClient}>
-          <Component
+          <DecoratedComp
             {...pageProps}
             url={router}
           />
