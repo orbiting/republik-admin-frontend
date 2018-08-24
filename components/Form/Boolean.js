@@ -8,7 +8,7 @@ export const parse = str => {
   const [field, v] = str.split('_')
   return {
     field: field.toString(),
-    value: v === 'true'
+    value: v === 'true',
   }
 }
 
@@ -22,8 +22,8 @@ const getInitialState = ({ bool, ...props }) =>
         enabled: false,
         bool: {
           field: props.fields[0],
-          value: false
-        }
+          value: false,
+        },
       }
 
 export class Form extends Component {
@@ -39,8 +39,8 @@ export class Form extends Component {
         ...this.state,
         bool: {
           ...this.state.bool,
-          field
-        }
+          field,
+        },
       }),
       this.emitChange
     )
@@ -52,7 +52,7 @@ export class Form extends Component {
     this.setState(
       () => ({
         ...this.state,
-        enabled
+        enabled,
       }),
       this.emitChange
     )
@@ -65,8 +65,8 @@ export class Form extends Component {
         ...this.state,
         bool: {
           ...this.state.bool,
-          value
-        }
+          value,
+        },
       }),
       this.emitChange
     )
@@ -74,12 +74,15 @@ export class Form extends Component {
 
   emitChange = () => {
     if (this.props.onChange) {
-      const { enabled, bool: { field, value } } = this.state
+      const {
+        enabled,
+        bool: { field, value },
+      } = this.state
       this.props.onChange(
         enabled
           ? {
               field,
-              value
+              value,
             }
           : undefined
       )
@@ -87,12 +90,17 @@ export class Form extends Component {
   }
 
   willReceiveProps(nextProps) {
-    this.setState(() => getInitialState(nextProps))
+    this.setState(() =>
+      getInitialState(nextProps)
+    )
   }
 
   render() {
     const { fields } = this.props
-    const { enabled, bool: { field, value } } = this.state
+    const {
+      enabled,
+      bool: { field, value },
+    } = this.state
 
     return (
       <div>
@@ -109,7 +117,10 @@ export class Form extends Component {
             onChange={this.fieldChangeHandler}
           >
             {fields.map(fieldName => (
-              <option key={fieldName} value={fieldName}>
+              <option
+                key={fieldName}
+                value={fieldName}
+              >
                 {fieldName}
               </option>
             ))}
@@ -130,5 +141,5 @@ export class Form extends Component {
 export default {
   Form,
   parse,
-  serialize
+  serialize,
 }

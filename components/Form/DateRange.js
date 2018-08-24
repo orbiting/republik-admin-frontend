@@ -1,148 +1,138 @@
 import React, { Component } from 'react'
-import Input from './Input'
+import {
+  colors,
+  Field,
+  Dropdown,
+  Interaction,
+} from '@project-r/styleguide'
+import { css } from 'glamor'
 import moment from 'moment'
 
-const standardDate = (rawDate) =>
-  moment(rawDate).format('YYYY-MM-DD')
-
-const localDate = (rawDate) =>
-  moment(rawDate).format('YYYY-MM-DD')
-
-export const parse = str => {
-  if (!str) {
-    return
-  }
-
-  const [field, dateRange] = str.split('_')
-  const [from, to] = dateRange.split(':')
-  return { field: field.toString(), from, to }
+const styles = {
+  mask: css({
+    '::placeholder': {
+      color: 'transparent',
+    },
+    ':focus': {
+      '::placeholder': {
+        color: '#ccc',
+      },
+    },
+  }),
+  container: css({
+    padding: '8px 8px 0 8px',
+    backgroundColor: colors.secondaryBg,
+  }),
+  hBox: css({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    '& > *': {
+      maxWidth: '32%',
+    },
+    '& > *:not(:first-child)': {
+      marginLeft: '10px',
+    },
+  }),
 }
 
-export const serialize = ({ field, from, to }) =>
-  `${field}_${from}:${to}`
+const standardDate = rawDate =>
+  moment(rawDate).format('YYYY-MM-DD')
 
-const getInitialState = ({ dateRange, ...props }) =>
-  dateRange
-    ? { dateRange, enabled: true }
-    : {
-        enabled: false,
-        dateRange: {
-          field: props.fields[0],
-          from: standardDate('2017-04-20'),
-          to: standardDate({})
-        }
-      }
+const localDate = rawDate =>
+  moment(rawDate).format('YYYY-MM-DD')
 
 export class Form extends Component {
   constructor(props) {
     super(props)
-    this.state = getInitialState(props)
-  }
 
-  fieldChangeHandler = event => {
-    const field = event.target.value
-    this.setState(
-      () => ({
-        ...this.state,
-        dateRange: {
-          ...this.state.dateRange,
-          field
-        }
-      }),
-      this.emitChange
-    )
-  }
+    this.state = this.props.dateRange || {
+      field: this.props.fields[0],
+      from: standardDate('2017-04-20'),
+      to: standardDate({}),
+    }
 
-  enabledChangeHandler = event => {
-    const enabled = event.target.checked
-
-    this.setState(
-      () => ({
-        ...this.state,
-        enabled
-      }),
-      this.emitChange
-    )
-  }
-
-  dateChangeHandler = (fieldName) => event => {
-    const value = event.target.value
-    this.setState(
-      () => ({
-        ...this.state,
-        dateRange: {
-          ...this.state.dateRange,
-          [fieldName]: value
-        }
-      }),
-      this.emitChange
-    )
-  }
-
-  emitChange = () => {
-    if (this.props.onChange) {
-      const {
-        enabled,
-        dateRange: { field, from, to }
-      } = this.state
-      this.props.onChange(
-        enabled
-          ? {
-              field,
-              from: localDate(from),
-              to: localDate(to)
-            }
-          : undefined
+    this.handleSelectedField = ({ value }) => {
+      this.setState(
+        () => ({
+          field: value,
+        }),
+        this.emitChange
       )
     }
-  }
+    this.handleStartDate = event => {
+      const value = event.target.value
+      this.setState(
+        () => ({
+          from: value,
+        }),
+        this.emitChange
+      )
+    }
 
-  willReceiveProps(nextProps) {
-    this.setState(() => getInitialState(nextProps))
+    this.handleEndDate = event => {
+      const value = event.target.value
+      this.setState(
+        () => ({
+          to: value,
+        }),
+        this.emitChange
+      )
+    }
+
+    this.emitChange = () => {
+      if (this.props.onChange) {
+        const { field, from, to } = this.state
+        this.props.onChange({
+          field,
+          from: localDate(from),
+          to: localDate(to),
+        })
+      }
+    }
   }
 
   render() {
     const { fields } = this.props
-    const {
-      enabled,
-      dateRange: { field, from, to }
-    } = this.state
+    const { field, from, to } = this.state
 
     return (
       <div>
-        <Input
-          type="checkbox"
-          checked={enabled}
-          label="Filter"
-          onChange={this.enabledChangeHandler}
-        />
-        {fields.length > 1 ? (
-          <select
-            value={field}
-            disabled={!enabled}
-            onChange={this.fieldChangeHandler}
-          >
-            {fields.map(fieldName => (
-              <option key={fieldName} value={fieldName}>
-                {fieldName}
-              </option>
-            ))}
-          </select>
-        ) : null}
-        <Input
-          label="From"
-          type="date"
-          disabled={!enabled}
-          onChange={this.dateChangeHandler('from')}
-          value={from}
-        />
-        <Input
-          label="Until"
-          type="date"
-          disabled={!enabled}
-          onChange={this.dateChangeHandler('to')}
-          value={to}
-        />
+        <Interaction.P>
+          Filter by date
+        </Interaction.P>
+        <div {...styles.container}>
+          <div {...styles.hBox}>
+            {fields.length > 1 ? (
+              <Dropdown.Native
+                label={'Column'}
+                value={field}
+                items={fields.map(value => ({
+                  value,
+                  text: value,
+                }))}
+                onChange={
+                  this.handleSelectedField
+                }
+              />
+            ) : null}
+            <Field
+              name="startDate"
+              label="From"
+              value={from}
+              type="date"
+              onChange={this.handleStartDate}
+            />
+            <Field
+              name="endDate"
+              label="Until"
+              value={to}
+              type="date"
+              onChange={this.handleEndDate}
+            />
+          </div>
+        </div>
       </div>
     )
   }
@@ -150,6 +140,4 @@ export class Form extends Component {
 
 export default {
   Form,
-  parse,
-  serialize
 }

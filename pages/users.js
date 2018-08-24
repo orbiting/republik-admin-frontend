@@ -3,25 +3,17 @@ import App from '../components/App'
 import {
   Body,
   Content,
-  Header
+  Header,
 } from '../components/Layout'
 import Users from '../components/Users/List'
-import { Router } from '../server/routes'
 
-const changeHandler = params => {
-  Router.pushRoute('users', params)
-}
-
-export default props => {
+export default () => {
   return (
     <App>
       <Body>
         <Header />
         <Content id="content">
-          <Users
-            params={props.url.query}
-            onChange={changeHandler}
-          />
+          <Users />
         </Content>
       </Body>
     </App>

@@ -1,41 +1,107 @@
-import React from 'react'
-import { colors } from '@project-r/styleguide'
-import Input from '../../Form/Input'
+import React, { Component } from 'react'
+import { css } from 'glamor'
+import {
+  Field,
+  Label,
+  Button,
+} from '@project-r/styleguide'
+
 import DateRange from '../../Form/DateRange'
 
-const searchHandler = handler => event => {
-  handler(event.target.value)
+const styles = {
+  container: css({
+    maxWidth: '600px',
+    margin: '20px auto 40px auto',
+  }),
+  showMoreButton: css({
+    display: 'block',
+    cursor: 'pointer',
+  }),
+  searchField: css({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    '& > *:not(:first-child)': {
+      marginLeft: '10px',
+    },
+  }),
 }
 
-const formSectionStyles = {
-  margin: '15px 0 15px 0'
-}
+export default class TableForm extends Component {
+  constructor(props) {
+    super(props)
+    this.state = this.props.value || {
+      dateRange: null,
+      search: '',
+      showFilters: false,
+    }
 
-export default ({
-  dateRange,
-  onDateRange,
-  search,
-  onSearch
-}) => (
-  <div
-    style={{
-      borderBottom: `1px solid ${colors.divider}`
-    }}
-  >
-    <div style={formSectionStyles}>
-      <Input
-        label="Search"
-        type="text"
-        value={search}
-        onChange={searchHandler(onSearch)}
-      />
-    </div>
-    <div style={formSectionStyles}>
-      <DateRange.Form
-        fields={['createdAt']}
-        dateRange={dateRange}
-        onChange={onDateRange}
-      />
-    </div>
-  </div>
-)
+    this.handleToggleForm = () => {
+      this.setState({
+        showFilters: !this.state.showFilters,
+      })
+    }
+
+    this.handleDateRange = v => {
+      this.setState({
+        dateRange: v,
+      })
+    }
+
+    this.handleSearch = (_, value) => {
+      this.setState({
+        search: value,
+      })
+    }
+
+    this.handleSubmit = event => {
+      event.preventDefault()
+      const { search, showFilters } = this.state
+      this.props.onChange &&
+        this.props.onChange({
+          search,
+          dateRange: showFilters
+            ? this.state.dateRange
+            : null,
+        })
+    }
+  }
+
+  render() {
+    const { showFilters } = this.state
+    return (
+      <form
+        {...styles.container}
+        onSubmit={this.handleSubmit}
+      >
+        <div {...styles.searchField}>
+          <Field
+            label="Search"
+            type="text"
+            value={this.state.search}
+            renderInput={props => (
+              <input {...props} autoFocus />
+            )}
+            onChange={this.handleSearch}
+          />
+          <Button type="submit">Go!</Button>
+        </div>
+        <Label
+          onClick={this.handleToggleForm}
+          {...styles.showMoreButton}
+        >
+          {showFilters
+            ? 'Show less ...'
+            : 'Show more...'}
+        </Label>
+        {showFilters && (
+          <DateRange.Form
+            fields={['createdAt', 'foobar']}
+            dateRange={this.state.dateRange}
+            onChange={this.handleDateRange}
+          />
+        )}
+      </form>
+    )
+  }
+}

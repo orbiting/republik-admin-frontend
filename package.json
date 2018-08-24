@@ -53,6 +53,7 @@
     "eslint": "^5.4.0",
     "eslint-plugin-react": "^7.11.1",
     "glob": "^7.1.2",
-    "gsheets": "^2.0.0"
+    "gsheets": "^2.0.0",
+    "prettier": "^1.14.2"
   }
 }

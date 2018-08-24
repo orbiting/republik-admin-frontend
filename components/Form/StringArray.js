@@ -1,149 +1,129 @@
 import React, { Component } from 'react'
-import Input from './Input'
+import {
+  colors,
+  Checkbox,
+  Dropdown,
+  Interaction,
+} from '@project-r/styleguide'
+import { css } from 'glamor'
 
-export const parse = str => {
-  if (!str) {
-    return
-  }
-
-  const [field, stringArray] = str.split(';)')
-  const values = stringArray.split(',')
-  return { field: field.toString(), values }
+const styles = {
+  mask: css({
+    '::placeholder': {
+      color: 'transparent',
+    },
+    ':focus': {
+      '::placeholder': {
+        color: '#ccc',
+      },
+    },
+  }),
+  container: css({
+    padding: '8px 8px 0 8px',
+    backgroundColor: colors.secondaryBg,
+  }),
+  hBox: css({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    '& > *': {
+      maxWidth: '32%',
+    },
+    '& > *:not(:first-child)': {
+      marginLeft: '10px',
+    },
+  }),
 }
-
-export const serialize = ({ field, values }) =>
-  `${field};)${values.join(',')}`
-
-const getInitialState = ({ stringArray, ...props }) =>
-  stringArray
-    ? { stringArray, enabled: true }
-    : {
-        enabled: false,
-        stringArray: {
-          field: props.fields[0][0],
-          values: []
-        }
-      }
 
 export class Form extends Component {
   constructor(props) {
     super(props)
-    this.state = getInitialState(props)
-  }
+    this.state = this.props.value || {
+      field: props.fields[0][0],
+      values: [],
+    }
 
-  fieldChangeHandler = event => {
-    const field = event.target.value
-    this.setState(
-      () => ({
-        ...this.state,
-        stringArray: {
+    this.handleSelectedField = ({ value }) => {
+      this.setState(
+        () => ({
+          field: value,
           values: [],
-          field
-        }
-      }),
-      this.emitChange
-    )
-  }
-
-  enabledChangeHandler = event => {
-    const enabled = event.target.checked
-
-    this.setState(
-      () => ({
-        ...this.state,
-        enabled
-      }),
-      this.emitChange
-    )
-  }
-
-  choiceChangeHandler = event => {
-    const value = event.target.value
-    const checked = event.target.checked
-    const oldValues = this.state.stringArray.values
-    const cleanValues = oldValues.filter(v => v !== value)
-    const values = checked
-      ? [value, ...cleanValues]
-      : cleanValues
-    this.setState(
-      () => ({
-        ...this.state,
-        stringArray: {
-          ...this.state.stringArray,
-          values
-        }
-      }),
-      this.emitChange
-    )
-  }
-
-  emitChange = () => {
-    if (this.props.onChange) {
-      const {
-        enabled,
-        stringArray: { field, values }
-      } = this.state
-      this.props.onChange(
-        enabled && values.length > 0
-          ? {
-              field,
-              values
-            }
-          : undefined
+        }),
+        this.emitChange
       )
     }
-  }
-
-  willReceiveProps(nextProps) {
-    this.setState(() => getInitialState(nextProps))
+    this.handleChoice = event => {
+      const { value, checked } = event.target
+      const oldValues = this.state.values
+      const cleanValues = oldValues.filter(
+        v => v !== value
+      )
+      const values = checked
+        ? [value, ...cleanValues]
+        : cleanValues
+      this.setState(
+        () => ({
+          values,
+        }),
+        this.emitChange
+      )
+    }
+    this.emitChange = () => {
+      if (this.props.onChange) {
+        const { field, values } = this.state
+        this.props.onChange(
+          values.length > 0
+            ? {
+                field,
+                values,
+              }
+            : undefined
+        )
+      }
+    }
   }
 
   render() {
     const { fields } = this.props
-    const {
-      enabled,
-      stringArray: { field, values }
-    } = this.state
+    const { field, values } = this.state
     const selectedField = fields.find(
       v => v && v[0] === field
     )
 
     return (
       <div>
-        <Input
-          type="checkbox"
-          checked={enabled}
-          label="Filter"
-          onChange={this.enabledChangeHandler}
-        />
-        {fields.length > 1 ? (
-          <select
-            value={field}
-            disabled={!enabled}
-            onChange={this.fieldChangeHandler}
-          >
-            {fields.map(fieldTuple => (
-              <option
-                key={fieldTuple[0]}
-                value={fieldTuple[0]}
-              >
-                {fieldTuple[0]}
-              </option>
-            ))}
-          </select>
-        ) : null}
-        {selectedField
-          ? selectedField[1].map(choice => (
-              <Input
-                type="checkbox"
-                key={choice}
-                label={choice}
-                value={choice}
-                checked={values.indexOf(choice) >= 0}
-                onChange={this.choiceChangeHandler}
+        <Interaction.P>
+          Filter by status
+        </Interaction.P>
+        <div {...styles.container}>
+          <div {...styles.hBox}>
+            {fields.length > 1 ? (
+              <Dropdown.Native
+                label={'Column'}
+                value={field}
+                items={fields.map(value => ({
+                  value,
+                  text: value,
+                }))}
+                onChange={
+                  this.handleSelectedField
+                }
               />
-            ))
-          : null}
+            ) : null}
+            {selectedField
+              ? selectedField[1].map(choice => (
+                  <Checkbox
+                    value={choice}
+                    checked={
+                      values.indexOf(choice) >= 0
+                    }
+                    onChange={this.handleChoice}
+                  />
+                ))
+              : null}
+          </div>
+        </div>
       </div>
     )
   }
@@ -151,6 +131,4 @@ export class Form extends Component {
 
 export default {
   Form,
-  parse,
-  serialize
 }
