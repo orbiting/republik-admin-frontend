@@ -41,7 +41,7 @@ const ConnectedAutoComplete = graphql(usersQuery, {
 })(Autocomplete)
 
 export class SearchUser extends Component {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     this.state = {
       items: [],
@@ -54,13 +54,13 @@ export class SearchUser extends Component {
     this.changeHandler = this.changeHandler.bind(this)
   }
 
-  filterChangeHandler(value) {
+  filterChangeHandler (value) {
     this.setState(() => ({
       filter: value
     }))
   }
 
-  changeHandler(value) {
+  changeHandler (value) {
     this.setState(
       () => ({
         value: value
@@ -69,7 +69,7 @@ export class SearchUser extends Component {
     )
   }
 
-  render() {
+  render () {
     const { filter, value } = this.state
     const user = value && value.value
     return (
