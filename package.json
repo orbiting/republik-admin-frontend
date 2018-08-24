@@ -9,7 +9,7 @@
     "build": "next build",
     "heroku-postbuild": "npm run build",
     "start": "node server/server.js",
-    "prettier": "prettier --single-quote --print-width 60 --no-semi --write \"{pages,lib,server,components}/**/*.{js,json}\""
+    "translations": "gsheets --key=1a-8RESf0Yjo2Mu15Q4SGWTmnY3ifuFbCVSD7WyYRhT0 --title=live --pretty --out lib/translations.json"
   },
   "dependencies": {
     "@project-r/styleguide": "^5.91.0",
@@ -50,13 +50,9 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.2.6",
-    "enzyme": "^3.4.4",
     "eslint": "^5.4.0",
     "eslint-plugin-react": "^7.11.1",
-    "faucet": "0.0.1",
     "glob": "^7.1.2",
-    "prettier": "^1.14.2",
-    "react-test-renderer": "^16.4.2",
-    "tape": "^4.9.1"
+    "gsheets": "^2.0.0"
   }
 }
