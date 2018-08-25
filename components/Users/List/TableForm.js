@@ -78,6 +78,7 @@ export default class TableForm extends Component {
           <Field
             label="Search"
             type="text"
+            isFocused={true}
             value={this.state.search}
             renderInput={props => (
               <input {...props} autoFocus />
@@ -96,8 +97,8 @@ export default class TableForm extends Component {
         </Label>
         {showFilters && (
           <DateRange.Form
-            fields={['createdAt', 'foobar']}
-            dateRange={this.state.dateRange}
+            fields={['createdAt']}
+            value={this.state.dateRange}
             onChange={this.handleDateRange}
           />
         )}

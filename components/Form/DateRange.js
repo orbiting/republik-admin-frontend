@@ -28,12 +28,11 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    '& > *': {
-      maxWidth: '32%',
-    },
-    '& > *:not(:first-child)': {
-      marginLeft: '10px',
-    },
+    alignItems: 'stretch',
+    alignContent: 'stretch',
+  }),
+  cell: css({
+    width: '33%',
   }),
 }
 
@@ -104,33 +103,45 @@ export class Form extends Component {
         </Interaction.P>
         <div {...styles.container}>
           <div {...styles.hBox}>
-            {fields.length > 1 ? (
-              <Dropdown.Native
-                label={'Column'}
-                value={field}
-                items={fields.map(value => ({
-                  value,
-                  text: value,
-                }))}
-                onChange={
-                  this.handleSelectedField
-                }
+            <div {...styles.cell}>
+              {fields.length > 1 ? (
+                <Dropdown.Native
+                  label={'Column'}
+                  value={field}
+                  items={fields.map(value => ({
+                    value,
+                    text: value,
+                  }))}
+                  onChange={
+                    this.handleSelectedField
+                  }
+                />
+              ) : (
+                <Field
+                  label={'Column'}
+                  value={fields[0]}
+                  disabled
+                />
+              )}
+            </div>
+            <div {...styles.cell}>
+              <Field
+                name="startDate"
+                label="From"
+                value={from}
+                type="date"
+                onChange={this.handleStartDate}
               />
-            ) : null}
-            <Field
-              name="startDate"
-              label="From"
-              value={from}
-              type="date"
-              onChange={this.handleStartDate}
-            />
-            <Field
-              name="endDate"
-              label="Until"
-              value={to}
-              type="date"
-              onChange={this.handleEndDate}
-            />
+            </div>
+            <div {...styles.cell}>
+              <Field
+                name="endDate"
+                label="Until"
+                value={to}
+                type="date"
+                onChange={this.handleEndDate}
+              />
+            </div>
           </div>
         </div>
       </div>

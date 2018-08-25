@@ -1,72 +1,72 @@
 import React, { Component } from 'react'
-import Input from './Input'
+import {
+  colors,
+  Dropdown,
+  Label,
+  Field,
+  Checkbox,
+  Interaction,
+} from '@project-r/styleguide'
+import { css } from 'glamor'
 
-export const parse = str => {
-  if (!str) {
-    return
-  }
-  const [field, v] = str.split('_')
-  return {
-    field: field.toString(),
-    value: v === 'true',
-  }
+const styles = {
+  mask: css({
+    '::placeholder': {
+      color: 'transparent',
+    },
+    ':focus': {
+      '::placeholder': {
+        color: '#ccc',
+      },
+    },
+  }),
+  container: css({
+    padding: '8px 8px 0 8px',
+    backgroundColor: colors.secondaryBg,
+  }),
+  hBox: css({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    alignItems: 'stretch',
+    alignContent: 'stretch',
+  }),
+  statusLabel: css({
+    display: 'block',
+    color: colors.disabled,
+    marginTop: '3px',
+    marginBottom: '4px',
+  }),
+  cellOne: css({
+    width: '33%',
+  }),
+  cellTwo: css({
+    width: '66%',
+  }),
 }
-
-export const serialize = ({ field, value }) =>
-  `${field}_${value.toString()}`
-
-const getInitialState = ({ bool, ...props }) =>
-  bool
-    ? { bool, enabled: true }
-    : {
-        enabled: false,
-        bool: {
-          field: props.fields[0],
-          value: false,
-        },
-      }
 
 export class Form extends Component {
   constructor(props) {
     super(props)
-    this.state = getInitialState(props)
+    this.state = this.props.value || {
+      field: this.props.fields[0],
+      value: false,
+    }
+    this.handleSelectedField = event => {
+      this.setState(
+        () => ({
+          field: event.target.value,
+        }),
+        this.emitChange
+      )
+    }
   }
 
-  fieldChangeHandler = event => {
-    const field = event.target.value
+  handleChange = (_, value) => {
     this.setState(
       () => ({
-        ...this.state,
-        bool: {
-          ...this.state.bool,
-          field,
-        },
-      }),
-      this.emitChange
-    )
-  }
-
-  enabledChangeHandler = event => {
-    const enabled = event.target.checked
-
-    this.setState(
-      () => ({
-        ...this.state,
-        enabled,
-      }),
-      this.emitChange
-    )
-  }
-
-  changeHandler = event => {
-    const value = event.target.checked
-    this.setState(
-      () => ({
-        ...this.state,
-        bool: {
-          ...this.state.bool,
-          value,
-        },
+        value,
       }),
       this.emitChange
     )
@@ -74,65 +74,62 @@ export class Form extends Component {
 
   emitChange = () => {
     if (this.props.onChange) {
-      const {
-        enabled,
-        bool: { field, value },
-      } = this.state
-      this.props.onChange(
-        enabled
-          ? {
-              field,
-              value,
-            }
-          : undefined
-      )
+      const { field, value } = this.state
+      this.props.onChange({
+        field,
+        value,
+      })
     }
-  }
-
-  willReceiveProps(nextProps) {
-    this.setState(() =>
-      getInitialState(nextProps)
-    )
   }
 
   render() {
     const { fields } = this.props
-    const {
-      enabled,
-      bool: { field, value },
-    } = this.state
+    const { field, value } = this.state
 
     return (
       <div>
-        <Input
-          type="checkbox"
-          checked={enabled}
-          label="Filter"
-          onChange={this.enabledChangeHandler}
-        />
-        {fields.length > 1 ? (
-          <select
-            value={field}
-            disabled={!enabled}
-            onChange={this.fieldChangeHandler}
-          >
-            {fields.map(fieldName => (
-              <option
-                key={fieldName}
-                value={fieldName}
-              >
-                {fieldName}
-              </option>
-            ))}
-          </select>
-        ) : null}
-        <Input
-          label={field}
-          type="checkbox"
-          disabled={!enabled}
-          onChange={this.changeHandler}
-          checked={value}
-        />
+        <Interaction.P>
+          Filter by status
+        </Interaction.P>
+        <div {...styles.container}>
+          <div {...styles.hBox}>
+            <div {...styles.cellOne}>
+              {fields.length > 1 ? (
+                <Dropdown.Native
+                  label={'Column'}
+                  value={field}
+                  items={fields.map(v => ({
+                    value: v[0],
+                    text: v[0],
+                  }))}
+                  onChange={
+                    this.handleSelectedField
+                  }
+                />
+              ) : (
+                <Field
+                  label={'Column'}
+                  value={fields[0]}
+                  disabled
+                />
+              )}
+            </div>
+            <div {...styles.cellTwo}>
+              <Label {...styles.statusLabel}>
+                Status
+              </Label>
+              <div {...styles.vBox}>
+                <Checkbox
+                  name={field}
+                  checked={value}
+                  onChange={this.handleChange}
+                >
+                  {'Set to true'}
+                </Checkbox>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -140,6 +137,4 @@ export class Form extends Component {
 
 export default {
   Form,
-  parse,
-  serialize,
 }

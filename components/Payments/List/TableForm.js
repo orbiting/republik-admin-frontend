@@ -1,6 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
+import {
+  colors,
+  Field,
+  Button,
+  Label,
+} from '@project-r/styleguide'
 import Input from '../../Form/Input'
 import DateRange from '../../Form/DateRange'
 import StringArray from '../../Form/StringArray'
@@ -26,7 +31,7 @@ const styles = {
   }),
 }
 
-export class TableForm extends Component {
+export default class TableForm extends Component {
   constructor(props) {
     super(props)
     this.state = this.props.value || {
@@ -110,7 +115,7 @@ export class TableForm extends Component {
         {showFilters && (
           <Fragment>
             <DateRange.Form
-              fields={['createdAt', 'foobar']}
+              fields={['createdAt']}
               dateRange={dateRange}
               onChange={this.handleDateRange}
             />
@@ -145,72 +150,3 @@ export class TableForm extends Component {
     )
   }
 }
-
-const searchHandler = handler => event => {
-  handler(event.target.value)
-}
-
-const formSectionStyles = {
-  margin: '15px 0 15px 0',
-}
-
-export default ({
-  search,
-  onSearch,
-  dateRange,
-  onDateRange,
-  stringArray,
-  onStringArray,
-}) => (
-  <div
-    style={{
-      borderBottom: `1px solid ${colors.divider}`,
-    }}
-  >
-    <div style={formSectionStyles}>
-      <Input
-        label="Search"
-        type="text"
-        value={search}
-        onChange={searchHandler(onSearch)}
-      />
-    </div>
-    <div style={formSectionStyles}>
-      <DateRange.Form
-        fields={['dueDate', 'createdAt']}
-        dateRange={dateRange}
-        onChange={onDateRange}
-      />
-    </div>
-    <div style={formSectionStyles}>
-      <StringArray.Form
-        fields={[
-          [
-            'status',
-            [
-              'WAITING',
-              'WAITING_FOR_REFUND',
-              'PAID',
-              'REFUNDED',
-              'CANCELLED',
-            ],
-          ],
-          [
-            'method',
-            [
-              'STRIPE',
-              'POSTFINANCECARD',
-              'PAYPAL',
-              'PAYMENTSLIP',
-            ],
-          ],
-        ]}
-        stringArray={stringArray}
-        onChange={onStringArray}
-      />
-    </div>
-    <div style={formSectionStyles}>
-      <CSVDownloader />
-    </div>
-  </div>
-)

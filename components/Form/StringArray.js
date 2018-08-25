@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {
   colors,
+  Label,
   Checkbox,
   Dropdown,
   Interaction,
@@ -27,12 +28,27 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    '& > *': {
-      maxWidth: '32%',
-    },
-    '& > *:not(:first-child)': {
-      marginLeft: '10px',
-    },
+    alignItems: 'stretch',
+    alignContent: 'stretch',
+  }),
+  cellOne: css({
+    width: '33%',
+  }),
+  cellTwo: css({
+    width: '66%',
+  }),
+  statusLabel: css({
+    display: 'block',
+    color: colors.disabled,
+    marginTop: '3px',
+    marginBottom: '4px',
+  }),
+  vBox: css({
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    maxHeight: '80px',
   }),
 }
 
@@ -54,7 +70,10 @@ export class Form extends Component {
       )
     }
     this.handleChoice = event => {
-      const { value, checked } = event.target
+      const {
+        name: value,
+        checked,
+      } = event.target
       const oldValues = this.state.values
       const cleanValues = oldValues.filter(
         v => v !== value
@@ -98,30 +117,54 @@ export class Form extends Component {
         </Interaction.P>
         <div {...styles.container}>
           <div {...styles.hBox}>
-            {fields.length > 1 ? (
-              <Dropdown.Native
-                label={'Column'}
-                value={field}
-                items={fields.map(value => ({
-                  value,
-                  text: value,
-                }))}
-                onChange={
-                  this.handleSelectedField
-                }
-              />
-            ) : null}
-            {selectedField
-              ? selectedField[1].map(choice => (
-                  <Checkbox
-                    value={choice}
-                    checked={
-                      values.indexOf(choice) >= 0
-                    }
-                    onChange={this.handleChoice}
-                  />
-                ))
-              : null}
+            <div {...styles.cellOne}>
+              {fields.length > 1 ? (
+                <Dropdown.Native
+                  label={'Column'}
+                  value={field}
+                  items={fields.map(value => ({
+                    value: value[0],
+                    text: value[0],
+                  }))}
+                  onChange={
+                    this.handleSelectedField
+                  }
+                />
+              ) : (
+                <Field
+                  label={'Column'}
+                  value={fields[0]}
+                  disabled
+                />
+              )}
+            </div>
+            <div {...styles.cellTwo}>
+              <Label {...styles.statusLabel}>
+                Status
+              </Label>
+              <div {...styles.vBox}>
+                {selectedField
+                  ? selectedField[1].map(
+                      choice => (
+                        <Checkbox
+                          key={choice}
+                          name={choice}
+                          checked={
+                            values.indexOf(
+                              choice
+                            ) >= 0
+                          }
+                          onChange={
+                            this.handleChoice
+                          }
+                        >
+                          {choice}
+                        </Checkbox>
+                      )
+                    )
+                  : null}
+              </div>
+            </div>
           </div>
         </div>
       </div>

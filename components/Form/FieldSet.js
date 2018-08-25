@@ -11,19 +11,19 @@ const MaskedInput =
 export const styles = {
   mask: css({
     '::placeholder': {
-      color: 'transparent'
+      color: 'transparent',
     },
     ':focus': {
       '::placeholder': {
-        color: '#ccc'
-      }
-    }
+        color: '#ccc',
+      },
+    },
   }),
   autoSize: css({
     minHeight: 40,
     paddingTop: '7px !important',
-    paddingBottom: '6px !important'
-  })
+    paddingBottom: '6px !important',
+  }),
 }
 
 export const getErrors = (fields, values) => {
@@ -43,7 +43,7 @@ export default class FieldSet extends Component {
     const {
       fields,
       values: maybeInitialValues,
-      onChange
+      onChange,
     } = this.props
 
     const initialValues = maybeInitialValues || {}
@@ -61,7 +61,7 @@ export default class FieldSet extends Component {
     onChange(
       {
         values,
-        errors
+        errors,
       },
       true
     )
@@ -73,7 +73,7 @@ export default class FieldSet extends Component {
       values: maybeValues,
       errors: maybeErrors,
       dirty: maybeDirty,
-      onChange
+      onChange,
     } = this.props
 
     const values = maybeValues || {}
@@ -91,7 +91,7 @@ export default class FieldSet extends Component {
             validator,
             mask,
             autoSize,
-            maskChar
+            maskChar,
           }) => {
             const Cmp = Field
             const additionalProps = {}
@@ -134,16 +134,18 @@ export default class FieldSet extends Component {
                 ) => {
                   onChange({
                     values: {
-                      [name]: value
+                      [name]: value,
                     },
                     errors: validator
                       ? {
-                          [name]: validator(value)
+                          [name]: validator(
+                            value
+                          ),
                         }
                       : {},
                     dirty: {
-                      [name]: shouldValidate
-                    }
+                      [name]: shouldValidate,
+                    },
                   })
                 }}
               />

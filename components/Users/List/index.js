@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import gql from 'graphql-tag'
 import { Spinner } from '@project-r/styleguide'
 
@@ -39,51 +39,55 @@ const GET_USERS = gql`
   }
 `
 
-export default () => (
-  <ConnectedList
-    query={GET_USERS}
-    limit={USERS_LIMIT}
-    namespace={'users'}
-  >
-    {({
-      formValue,
-      // disabledFields,
-      loading,
-      error,
-      items,
-      handleChange,
-      // toggleField,
-    }) => {
-      const {
-        search,
-        dateRange,
-        orderBy,
-      } = formValue
-      return (
-        <div>
-          <TableForm
-            value={{ search, dateRange }}
-            onChange={handleChange}
-          />
-          {items && (
-            <TableHead
-              sort={orderBy}
-              onSort={v =>
-                handleChange({ orderBy: v })
-              }
-            />
-          )}
-          {error ? (
-            <ErrorMessage error={error} />
-          ) : loading ? (
-            <div style={{ height: 100 }}>
-              <Spinner />
+export default class UsersList extends Component {
+  render() {
+    return (
+      <ConnectedList
+        query={GET_USERS}
+        limit={USERS_LIMIT}
+        namespace={'users'}
+      >
+        {({
+          formValue,
+          // disabledFilters,
+          loading,
+          error,
+          items,
+          handleChange,
+          // toggleField,
+        }) => {
+          const {
+            search,
+            dateRange,
+            orderBy,
+          } = formValue
+          return (
+            <div>
+              <TableForm
+                value={{ search, dateRange }}
+                onChange={handleChange}
+              />
+              {items && (
+                <TableHead
+                  sort={orderBy}
+                  onSort={v =>
+                    handleChange({ orderBy: v })
+                  }
+                />
+              )}
+              {error ? (
+                <ErrorMessage error={error} />
+              ) : loading ? (
+                <div style={{ height: 100 }}>
+                  <Spinner />
+                </div>
+              ) : items ? (
+                <TableBody items={items} />
+              ) : null}
             </div>
-          ) : items ? (
-            <TableBody items={items} />
-          ) : null}
-        </div>
-      )
-    }}
-  </ConnectedList>
-)
+          )
+        }}
+      </ConnectedList>
+    )
+  }
+}

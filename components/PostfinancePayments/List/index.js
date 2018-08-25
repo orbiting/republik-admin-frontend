@@ -1,187 +1,63 @@
 import React, { Component } from 'react'
-import { graphql } from 'react-apollo'
+import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
-import { compose } from 'react-apollo'
-import InfiniteScroller from 'react-infinite-scroller'
-import DateRange from '../../Form/DateRange'
-import Bool from '../../Form/Boolean'
+import { Spinner } from '@project-r/styleguide'
+import ConnectedList from '../../ConnectedList'
 import ErrorMessage from '../../ErrorMessage'
 
 import TableForm from './TableForm'
 import TableHead from './TableHead'
 import TableBody from './TableBody'
+import UploadForm from './UploadForm'
 
-import {
-  serializeOrderBy,
-  deserializeOrderBy
-} from '../../../lib/utils/queryParams'
-
-const PAYMENTS_LIMIT = 200
-
-const identity = v => v
-
-const createChangeHandler = (params, handler) => (
-  fieldName,
-  serializer
-) => value => {
-  const s = serializer || identity
-  if (value && value !== '') {
-    handler({
-      ...params,
-      ...{ [fieldName]: s(value) }
-    })
-  } else {
-    delete params[fieldName]
-    handler(params)
-  }
-}
-
-const getInitialState = () => ({
-  error: false,
-  feedback: false
-})
-
-class PostfinancePayments extends Component {
-  constructor(props) {
-    super(props)
-    this.state = getInitialState(props)
-  }
-
-  uploadHandler = ({ csv }) => {
-    this.props
-      .uploadCSV({ csv })
-      .then(v =>
-        this.setState(() => ({
-          ...this.state,
-          feedback: v.data.importPostfinanceCSV
-        }))
-      )
-      .catch(e =>
-        this.setState(() => ({
-          ...this.state,
-          error: e
-        }))
-      )
-  }
-
-  rematchHandler = () => {
-    this.props
-      .rematchPayments()
-      .then(v =>
-        this.setState(() => ({
-          ...this.state,
-          feedback: v.data.rematchPayments
-        }))
-      )
-      .catch(e =>
-        this.setState(() => ({
-          ...this.state,
-          error: e
-        }))
-      )
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState(() =>
-      getInitialState(nextProps)
-    )
-  }
-
-  render() {
-    const props = this.props
-    const renderErrors = () => {
-      if (props.data.error || this.state.error) {
-        return (
-          <div>
-            {props.data.error && (
-              <ErrorMessage
-                error={props.data.error}
-              />
-            )}
-            {this.state.error && (
-              <ErrorMessage
-                error={this.state.error}
-              />
-            )}
-          </div>
-        )
-      }
+const UPDATE_POSTFINANCE_PAYMENT = gql`
+  mutation updatePostfinancePayment(
+    $id: ID!
+    $message: String!
+  ) {
+    updatePostfinancePayment(
+      pfpId: $id
+      mitteilung: $message
+    ) {
+      id
+      hidden
     }
-
-    const {
-      data: { postfinancePayments },
-      params,
-      loadMorePayments,
-      updatePostfinancePayment,
-      hidePostfinancePayment,
-      manuallyMatchPostfinancePayment,
-      onChange
-    } = props
-
-    const changeHandler = createChangeHandler(
-      params,
-      onChange
-    )
-
-    if (!props.data.postfinancePayments) {
-      return <div>Loading</div>
-    }
-    const { items, count } = postfinancePayments
-    return (
-      <InfiniteScroller
-        loadMore={loadMorePayments}
-        hasMore={count > items.length}
-        useWindow={false}
-      >
-        <div>
-          {renderErrors()}
-          {this.state.feedback && (
-            <div>{this.state.feedback}</div>
-          )}
-          <TableForm
-            search={params.search}
-            onSearch={changeHandler('search')}
-            dateRange={DateRange.parse(
-              params.dateRange
-            )}
-            onDateRange={changeHandler(
-              'dateRange',
-              DateRange.serialize
-            )}
-            bool={Bool.parse(params.bool)}
-            onBool={changeHandler(
-              'bool',
-              Bool.serialize
-            )}
-            onUpload={this.uploadHandler}
-            onRematch={this.rematchHandler}
-          />
-          <TableHead
-            sort={deserializeOrderBy(
-              params.orderBy
-            )}
-            onSort={changeHandler(
-              'orderBy',
-              serializeOrderBy
-            )}
-          />
-          <TableBody
-            items={
-              props.data.postfinancePayments.items
-            }
-            onMessage={updatePostfinancePayment}
-            onHide={hidePostfinancePayment}
-            onMatch={
-              manuallyMatchPostfinancePayment
-            }
-          />
-        </div>
-      </InfiniteScroller>
-    )
   }
-}
+`
 
-const postfinancePaymentsQuery = gql`
+const IMPORT_POSTFINANCE_CSV = gql`
+  mutation importPostfinanceCSV($csv: String!) {
+    importPostfinanceCSV(csv: $csv)
+  }
+`
+
+const REMATCH_PAYMENTS = gql`
+  mutation rematchPayments {
+    rematchPayments
+  }
+`
+
+const HIDE_POSTFINANCE_PAYMENTS = gql`
+  mutation hidePostfinancePayment($id: ID!) {
+    hidePostfinancePayment(id: $id) {
+      id
+      hidden
+    }
+  }
+`
+
+const MANUALLY_MATCH_POSTFINANCE_PAYMENTS = gql`
+  mutation manuallyMatchPostfinancePayment(
+    $id: ID!
+  ) {
+    manuallyMatchPostfinancePayment(id: $id) {
+      id
+      hidden
+    }
+  }
+`
+
+const GET_POSTFINANCE_PAYMENTS = gql`
   query postfinancePayments(
     $limit: Int!
     $offset: Int
@@ -215,281 +91,151 @@ const postfinancePaymentsQuery = gql`
   }
 `
 
-const updatePostfinancePaymentMutation = gql`
-  mutation updatePostfinancePayment(
-    $id: ID!
-    $message: String!
-  ) {
-    updatePostfinancePayment(
-      pfpId: $id
-      mitteilung: $message
-    ) {
-      id
-      hidden
+const POSTFINANCE_PAYMENTS_LIMIT = 200
+
+export default class PostfinancePayments extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      error: false,
+      feedback: false,
     }
-  }
-`
 
-const uploadMutation = gql`
-  mutation importPostfinanceCSV($csv: String!) {
-    importPostfinanceCSV(csv: $csv)
-  }
-`
+    this.handleError = error =>
+      this.setState({
+        error,
+      })
 
-const rematchMutation = gql`
-  mutation rematchPayments {
-    rematchPayments
-  }
-`
+    this.handleUploadResponse = ({ data }) =>
+      this.setState({
+        feedback: data.importPostfinanceCSV,
+      })
 
-const hidePostfinancePaymentMutation = gql`
-  mutation hidePostfinancePayment($id: ID!) {
-    hidePostfinancePayment(id: $id) {
-      id
-      hidden
-    }
+    this.handleRematchResponse = ({ data }) =>
+      this.setState({
+        feedback: data.rematchPayments,
+      })
   }
-`
 
-const manuallyMatchPostfinancePaymentMutation = gql`
-  mutation manuallyMatchPostfinancePayment(
-    $id: ID!
-  ) {
-    manuallyMatchPostfinancePayment(id: $id) {
-      id
-      hidden
-    }
-  }
-`
+  renderErrors() {}
 
-export default compose(
-  graphql(postfinancePaymentsQuery, {
-    options: ({
-      params: { orderBy, search, dateRange, bool }
-    }) => {
-      return {
-        variables: {
-          limit: PAYMENTS_LIMIT,
-          offset: 0,
-          orderBy: deserializeOrderBy(orderBy),
-          dateRange: DateRange.parse(dateRange),
-          bool: Bool.parse(bool),
-          search
-        }
-      }
-    },
-    props: ({ data }) => {
-      return {
-        data,
-        loadMorePayments: () => {
-          if (!data) {
-            throw new Error(
-              'data object undefined'
-            )
-          }
-          return data.fetchMore({
-            variables: {
-              offset:
-                data.postfinancePayments.items
-                  .length
-            },
-            updateQuery: (
-              previousResult,
-              { fetchMoreResult }
-            ) => {
-              if (!fetchMoreResult) {
-                return previousResult
-              }
-              return {
-                ...previousResult,
-                ...{
-                  postfinancePayments: {
-                    ...previousResult.postfinancePayments,
-                    ...fetchMoreResult.postfinancePayments,
-                    items: [
-                      ...previousResult
-                        .postfinancePayments
-                        .items,
-                      ...fetchMoreResult
-                        .postfinancePayments.items
-                    ]
-                  }
-                }
-              }
-            }
-          })
-        }
-      }
-    }
-  }),
-  graphql(updatePostfinancePaymentMutation, {
-    props: ({
-      mutate,
-      ownProps: {
-        params: {
-          orderBy,
-          search,
-          dateRange,
-          bool
-        }
-      }
-    }) => ({
-      updatePostfinancePayment: ({
-        id,
-        message
-      }) => {
-        if (mutate) {
-          return mutate({
-            variables: { id, message },
-            refetchQueries: [
-              {
-                query: postfinancePaymentsQuery,
-                variables: {
-                  limit: PAYMENTS_LIMIT,
-                  offset: 0,
-                  orderBy: deserializeOrderBy(
-                    orderBy
-                  ),
-                  dateRange: DateRange.parse(
-                    dateRange
-                  ),
-                  bool: Bool.parse(bool),
-                  search
-                }
-              }
-            ]
-          })
-        }
-      }
-    })
-  }),
-  graphql(uploadMutation, {
-    props: ({ mutate }) => ({
-      uploadCSV: ({ csv }) => {
-        if (mutate) {
-          return mutate({
-            variables: { csv }
-          })
-        }
-      }
-    })
-  }),
-  graphql(hidePostfinancePaymentMutation, {
-    props: ({
-      mutate,
-      ownProps: {
-        params: {
-          orderBy,
-          search,
-          dateRange,
-          bool
-        }
-      }
-    }) => ({
-      hidePostfinancePayment: ({ id }) => {
-        if (mutate) {
-          return mutate({
-            variables: { id },
-            refetchQueries: [
-              {
-                query: postfinancePaymentsQuery,
-                variables: {
-                  limit: PAYMENTS_LIMIT,
-                  offset: 0,
-                  orderBy: deserializeOrderBy(
-                    orderBy
-                  ),
-                  dateRange: DateRange.parse(
-                    dateRange
-                  ),
-                  bool: Bool.parse(bool),
-                  search
-                }
-              }
-            ]
-          })
-        }
-      }
-    })
-  }),
-  graphql(
-    manuallyMatchPostfinancePaymentMutation,
-    {
-      props: ({
-        mutate,
-        ownProps: {
-          params: {
-            orderBy,
+  render() {
+    const messages = (
+      <div>
+        {this.renderErrors()}
+        {this.state.feedback && (
+          <div>{this.state.feedback}</div>
+        )}
+      </div>
+    )
+    return (
+      <ConnectedList
+        query={GET_POSTFINANCE_PAYMENTS}
+        limit={POSTFINANCE_PAYMENTS_LIMIT}
+        namespace={'postfinancePayments'}
+      >
+        {({
+          formValue,
+          // disabledFilters,
+          loading,
+          error,
+          items,
+          handleChange,
+          // toggleField,
+        }) => {
+          const {
             search,
             dateRange,
-            bool
-          }
-        }
-      }) => ({
-        manuallyMatchPostfinancePayment: ({
-          id
-        }) => {
-          if (mutate) {
-            return mutate({
-              variables: { id },
-              refetchQueries: [
-                {
-                  query: postfinancePaymentsQuery,
-                  variables: {
-                    limit: PAYMENTS_LIMIT,
-                    offset: 0,
-                    orderBy: deserializeOrderBy(
-                      orderBy
-                    ),
-                    dateRange: DateRange.parse(
-                      dateRange
-                    ),
-                    bool: Bool.parse(bool),
-                    search
+            orderBy,
+          } = formValue
+          return (
+            <div>
+              <TableForm
+                value={{ search, dateRange }}
+                onChange={handleChange}
+              />
+              {items && (
+                <TableHead
+                  sort={orderBy}
+                  onSort={v =>
+                    handleChange({ orderBy: v })
                   }
-                }
-              ]
-            })
-          }
-        }
-      })
-    }
-  ),
-  graphql(rematchMutation, {
-    props: ({
-      mutate,
-      ownProps: {
-        params: {
-          orderBy,
-          search,
-          dateRange,
-          bool
-        }
-      }
-    }) => ({
-      rematchPayments: () => {
-        if (mutate) {
-          return mutate({
-            refetchQueries: [
-              {
-                query: postfinancePaymentsQuery,
-                variables: {
-                  limit: PAYMENTS_LIMIT,
-                  offset: 0,
-                  orderBy: deserializeOrderBy(
-                    orderBy
-                  ),
-                  dateRange: DateRange.parse(
-                    dateRange
-                  ),
-                  bool: Bool.parse(bool),
-                  search
-                }
-              }
-            ]
-          })
-        }
-      }
-    })
-  })
-)(PostfinancePayments)
+                />
+              )}
+              {error ? (
+                <ErrorMessage error={error} />
+              ) : loading ? (
+                <div style={{ height: 100 }}>
+                  <Spinner />
+                </div>
+              ) : items ? (
+                <TableBody items={items} />
+              ) : null}
+            </div>
+          )
+        }}
+      </ConnectedList>
+    )
+  }
+}
+
+/*
+class PostfinancePayments extends Component {
+
+
+    const {
+      data: { postfinancePayments },
+      params,
+      loadMorePayments,
+      updatePostfinancePayment,
+      hidePostfinancePayment,
+      manuallyMatchPostfinancePayment,
+      onChange,
+    } = props
+
+
+        <div>
+          {renderErrors()}
+          {this.state.feedback && (
+            <div>{this.state.feedback}</div>
+          )}
+          <TableForm
+            search={params.search}
+            onSearch={changeHandler('search')}
+            dateRange={DateRange.parse(
+              params.dateRange
+            )}
+            onDateRange={changeHandler(
+              'dateRange',
+              DateRange.serialize
+            )}
+            bool={Bool.parse(params.bool)}
+            onBool={changeHandler(Bool.serialize)}
+            onUpload={this.uploadHandler}
+            onRematch={this.rematchHandler}
+          />
+          <TableHead
+            sort={deserializeOrderBy(
+              params.orderBy
+            )}
+            onSort={changeHandler(
+              'orderBy',
+              serializeOrderBy
+            )}
+          />
+          <TableBody
+            items={
+              props.data.postfinancePayments.items
+            }
+            onMessage={updatePostfinancePayment}
+            onHide={hidePostfinancePayment}
+            onMatch={
+              manuallyMatchPostfinancePayment
+            }
+          />
+        </div>
+      </InfiniteScroller>
+    )
+  }
+}
+*/

@@ -1,66 +1,132 @@
-import React from 'react'
-
-import { colors } from '@project-r/styleguide'
-import Input from '../../Form/Input'
+import React, { Component, Fragment } from 'react'
+import { css } from 'glamor'
+import {
+  Field,
+  Label,
+  Button,
+} from '@project-r/styleguide'
 
 import DateRange from '../../Form/DateRange'
 import Boolean from '../../Form/Boolean'
-import UploadForm from './UploadForm'
 
-const searchHandler = handler => event => {
-  handler(event.target.value)
+const styles = {
+  container: css({
+    maxWidth: '600px',
+    margin: '20px auto 40px auto',
+  }),
+  showMoreButton: css({
+    display: 'block',
+    cursor: 'pointer',
+  }),
+  searchField: css({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    '& > *:not(:first-child)': {
+      marginLeft: '10px',
+    },
+  }),
 }
 
-const formSectionStyles = {
-  margin: '15px 0 15px 0'
-}
+export default class TableForm extends Component {
+  constructor(props) {
+    super(props)
+    this.state = this.props.value || {
+      dateRange: null,
+      search: '',
+      boolean: null,
+      showFilters: false,
+    }
 
-export default ({
-  search,
-  onSearch,
-  dateRange,
-  onDateRange,
-  bool,
-  onBool,
-  onUpload,
-  onRematch
-}) => (
-  <div
-    style={{
-      borderBottom: `1px solid ${colors.divider}`
-    }}
-  >
-    <div style={formSectionStyles}>
-      <Input
-        label="Search"
-        type="text"
-        value={search}
-        onChange={searchHandler(onSearch)}
-      />
-    </div>
-    <div style={formSectionStyles}>
-      <DateRange.Form
-        fields={[
-          'buchungsdatum',
-          'valuta',
-          'createdAt'
-        ]}
-        dateRange={dateRange}
-        onChange={onDateRange}
-      />
-    </div>
-    <div style={formSectionStyles}>
-      <Boolean.Form
-        fields={['matched']}
-        bool={bool}
-        onChange={onBool}
-      />
-    </div>
-    <div style={formSectionStyles}>
-      <UploadForm onUpload={onUpload} />
-      <button onClick={onRematch}>
-        Rematch payments
-      </button>
-    </div>
-  </div>
-)
+    this.handleToggleForm = () => {
+      this.setState({
+        showFilters: !this.state.showFilters,
+      })
+    }
+
+    this.handleDateRange = v => {
+      this.setState({
+        dateRange: v,
+      })
+    }
+
+    this.handleBoolean = v => {
+      this.setState({
+        boolean: v,
+      })
+    }
+    this.handleSearch = (_, v) => {
+      this.setState({
+        search: v,
+      })
+    }
+
+    this.handleSubmit = event => {
+      event.preventDefault()
+      const {
+        search,
+
+        showFilters,
+      } = this.state
+      this.props.onChange &&
+        this.props.onChange({
+          search,
+          boolean: showFilters
+            ? this.state.boolean
+            : null,
+          dateRange: showFilters
+            ? this.state.dateRange
+            : null,
+        })
+    }
+  }
+
+  render() {
+    const { showFilters } = this.state
+    return (
+      <form
+        {...styles.container}
+        onSubmit={this.handleSubmit}
+      >
+        <div {...styles.searchField}>
+          <Field
+            label="Search"
+            type="text"
+            value={this.state.search}
+            renderInput={props => (
+              <input {...props} autoFocus />
+            )}
+            onChange={this.handleSearch}
+          />
+          <Button type="submit">Go!</Button>
+        </div>
+        <Label
+          onClick={this.handleToggleForm}
+          {...styles.showMoreButton}
+        >
+          {showFilters
+            ? 'Show less ...'
+            : 'Show more...'}
+        </Label>
+        {showFilters && (
+          <Fragment>
+            <DateRange.Form
+              fields={[
+                'buchungsdatum',
+                'valuta',
+                'createdAt',
+              ]}
+              value={this.state.dateRange}
+              onChange={this.handleDateRange}
+            />
+            <Boolean.Form
+              fields={['matched']}
+              value={this.state.boolean}
+              onChange={this.handleBoolean}
+            />
+          </Fragment>
+        )}
+      </form>
+    )
+  }
+}

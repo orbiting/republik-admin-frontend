@@ -7,8 +7,7 @@ export default class List extends Component {
     super(props)
 
     this.state = {
-      disabledFields: {
-        search: false,
+      disabledFilters: {
         dateRange: true,
         orderBy: true,
         stringArray: true,
@@ -25,15 +24,15 @@ export default class List extends Component {
 
     this.toggleField = name =>
       this.setState({
-        disabledFields: {
-          ...this.state.disabledFields,
-          [name]: !this.state.disabledFields[
+        disabledFilters: {
+          ...this.state.disabledFilters,
+          [name]: !this.state.disabledFilters[
             name
           ],
         },
       })
+
     this.handleChange = value => {
-      console.log(value)
       this.setState({
         formValue: {
           ...this.state.formValue,
@@ -41,27 +40,27 @@ export default class List extends Component {
         },
       })
     }
-  }
 
-  updateQuery(
-    previousResult,
-    { fetchMoreResult }
-  ) {
-    if (!fetchMoreResult) {
-      return previousResult
-    }
-    return {
-      ...previousResult,
-      ...{
-        [this.props.namespace]: {
-          ...previousResult.users,
-          ...fetchMoreResult.users,
-          items: [
-            ...previousResult.users.items,
-            ...fetchMoreResult.users.items,
-          ],
+    this.updateQuery = (
+      previousResult,
+      { fetchMoreResult }
+    ) => {
+      if (!fetchMoreResult) {
+        return previousResult
+      }
+      return {
+        ...previousResult,
+        ...{
+          [this.props.namespace]: {
+            ...previousResult.users,
+            ...fetchMoreResult.users,
+            items: [
+              ...previousResult.users.items,
+              ...fetchMoreResult.users.items,
+            ],
+          },
         },
-      },
+      }
     }
   }
 
@@ -74,7 +73,7 @@ export default class List extends Component {
         stringArray,
         boolean,
       },
-      disabledFields,
+      disabledFilters,
     } = this.state
 
     const {
@@ -92,16 +91,16 @@ export default class List extends Component {
           limit: limit,
           offset: 0,
           search,
-          orderBy: !disabledFields.orderBy
+          orderBy: !disabledFilters.orderBy
             ? orderBy
             : null,
-          dateRange: !disabledFields.dateRange
+          dateRange: !disabledFilters.dateRange
             ? dateRange
             : null,
-          stringArray: !disabledFields.stringArray
+          stringArray: !disabledFilters.stringArray
             ? stringArray
             : null,
-          boolean: !disabledFields.boolean
+          boolean: !disabledFilters.boolean
             ? boolean
             : null,
         }}
@@ -130,8 +129,7 @@ export default class List extends Component {
                       (items && items.length) ||
                       0,
                   },
-                  updateQuery: this
-                    .updateUsersQuery,
+                  updateQuery: this.updateQuery,
                 })
               }}
               hasMore={
@@ -143,7 +141,7 @@ export default class List extends Component {
             >
               {children({
                 formValue: this.state,
-                disabledFields,
+                disabledFilters,
                 loading: isLoading,
                 error,
                 items,
