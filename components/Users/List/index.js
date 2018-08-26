@@ -98,7 +98,6 @@ export default class UsersList extends Component {
           handleOrderBy,
           handleToggleFilter,
         }) => {
-          console.log(disabledFilters)
           return (
             <div>
               <FilterForm
