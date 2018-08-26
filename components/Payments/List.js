@@ -27,7 +27,7 @@ const displayDate = rawDate => {
 
 const getDueDate = (status, dueDate) => {
   if (!dueDate) {
-    return '-'
+    return <span>-</span>
   } else if (
     new Date(dueDate) < new Date() &&
     status !== 'PAID'
@@ -121,7 +121,7 @@ const table = [
   [
     'total',
     {
-      width: '10%',
+      width: '15%',
       label: 'Total',
       orderable: true,
     },
@@ -129,7 +129,7 @@ const table = [
   [
     'status',
     {
-      width: '20%',
+      width: '10%',
       label: 'Status',
       orderable: true,
     },
@@ -161,7 +161,7 @@ const table = [
   [
     'options',
     {
-      width: '5%',
+      width: '10%',
       label: 'Detail',
       orderable: true,
     },

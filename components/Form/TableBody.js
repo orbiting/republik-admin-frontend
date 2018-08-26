@@ -5,7 +5,9 @@ import { Table, Row, Cell } from '../Layout/Table'
 
 const styles = {
   row: css({
-    padding: '0 5px',
+    padding: '10px 0px',
+    width: '100%',
+    flexwWrap: 'nowrap',
     '&:nth-child(odd)': {
       backgroundColor: colors.secondaryBg,
     },
