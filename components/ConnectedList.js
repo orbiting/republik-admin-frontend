@@ -13,7 +13,7 @@ export default class List extends Component {
         stringArray: true,
         boolean: true,
       },
-      formValue: {
+      filterValues: {
         search: '',
         dateRange: null,
         orderBy: null,
@@ -22,7 +22,7 @@ export default class List extends Component {
       },
     }
 
-    this.toggleField = name =>
+    this.handleToggleFilter = name =>
       this.setState({
         disabledFilters: {
           ...this.state.disabledFilters,
@@ -34,8 +34,8 @@ export default class List extends Component {
 
     this.handleChange = value => {
       this.setState({
-        formValue: {
-          ...this.state.formValue,
+        filterValues: {
+          ...this.state.filterValues,
           ...value,
         },
       })
@@ -52,11 +52,19 @@ export default class List extends Component {
         ...previousResult,
         ...{
           [this.props.namespace]: {
-            ...previousResult.users,
-            ...fetchMoreResult.users,
+            ...previousResult[
+              this.props.namespace
+            ],
+            ...fetchMoreResult[
+              this.props.namespace
+            ],
             items: [
-              ...previousResult.users.items,
-              ...fetchMoreResult.users.items,
+              ...previousResult[
+                this.props.namespace
+              ].items,
+              ...fetchMoreResult[
+                this.props.namespace
+              ].items,
             ],
           },
         },
@@ -66,7 +74,7 @@ export default class List extends Component {
 
   render() {
     const {
-      formValue: {
+      filterValues: {
         orderBy,
         dateRange,
         search,
@@ -140,13 +148,14 @@ export default class List extends Component {
               useWindow={false}
             >
               {children({
-                formValue: this.state,
+                filterValues: this.state,
                 disabledFilters,
                 loading: isLoading,
                 error,
                 items,
                 handleChange: this.handleChange,
-                toggleField: this.toggleField,
+                handleToggleFilter: this
+                  .handleToggleFilter,
               })}
             </InfiniteScroller>
           )

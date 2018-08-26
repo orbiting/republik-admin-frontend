@@ -4,6 +4,7 @@ import {
   Label,
   Checkbox,
   Dropdown,
+  Field,
   Interaction,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
@@ -104,7 +105,7 @@ export class Form extends Component {
   }
 
   render() {
-    const { fields } = this.props
+    const { fields, disabled } = this.props
     const { field, values } = this.state
     const selectedField = fields.find(
       v => v && v[0] === field
@@ -113,7 +114,7 @@ export class Form extends Component {
     return (
       <div>
         <Interaction.P>
-          Filter by status
+          Filter by enum
         </Interaction.P>
         <div {...styles.container}>
           <div {...styles.hBox}>
@@ -122,6 +123,7 @@ export class Form extends Component {
                 <Dropdown.Native
                   label={'Column'}
                   value={field}
+                  disabled={disabled}
                   items={fields.map(value => ({
                     value: value[0],
                     text: value[0],
@@ -147,6 +149,7 @@ export class Form extends Component {
                   ? selectedField[1].map(
                       choice => (
                         <Checkbox
+                          disabled={disabled}
                           key={choice}
                           name={choice}
                           checked={

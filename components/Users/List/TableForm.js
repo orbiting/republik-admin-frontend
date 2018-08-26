@@ -7,6 +7,7 @@ import {
 } from '@project-r/styleguide'
 
 import DateRange from '../../Form/DateRange'
+import Filter from '../../Form/Filter'
 
 const styles = {
   container: css({

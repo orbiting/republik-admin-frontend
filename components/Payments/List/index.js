@@ -4,9 +4,9 @@ import ErrorMessage from '../../ErrorMessage'
 import ConnectedList from '../../ConnectedList'
 import { Spinner } from '@project-r/styleguide'
 
-import TableForm from './TableForm'
 import TableHead from './TableHead'
 import TableBody from './TableBody'
+import FilterForm from '../../Form/FilterForm'
 
 const PAYMENTS_LIMIT = 200
 
@@ -45,6 +45,32 @@ const GET_PAYMENTS = gql`
     }
   }
 `
+
+const filters = {
+  dateRange: ['createdAt'],
+  stringArray: [
+    [
+      'status',
+      [
+        'WAITING',
+        'WAITING_FOR_REFUND',
+        'PAID',
+        'REFUNDED',
+        'CANCELLED',
+      ],
+    ],
+    [
+      'method',
+      [
+        'STRIPE',
+        'POSTFINANCECARD',
+        'PAYPAL',
+        'PAYMENTSLIP',
+      ],
+    ],
+  ],
+}
+
 export default () => (
   <ConnectedList
     query={GET_PAYMENTS}
@@ -52,29 +78,23 @@ export default () => (
     namespace={'payments'}
   >
     {({
-      formValue,
-      // disabledFilters,
+      filterValues,
+      disabledFilters,
       loading,
       error,
       items,
       handleChange,
-      // toggleField,
+      handleToggleFilter,
     }) => {
-      const {
-        search,
-        dateRange,
-        orderBy,
-        stringArray,
-      } = formValue
+      const { orderBy } = filterValues
       return (
         <div>
-          <TableForm
-            value={{
-              search,
-              dateRange,
-              stringArray,
-            }}
-            onChange={handleChange}
+          <FilterForm
+            filters={filters}
+            value={filterValues}
+            onToggleFilter={handleToggleFilter}
+            disabled={disabledFilters}
+            onSubmit={handleChange}
           />
           {items && (
             <TableHead

@@ -3,9 +3,9 @@ import gql from 'graphql-tag'
 import { Spinner } from '@project-r/styleguide'
 
 import ErrorMessage from '../../ErrorMessage'
-import TableForm from './TableForm'
 import TableHead from './TableHead'
 import TableBody from './TableBody'
+import FilterForm from '../../Form/FilterForm'
 import ConnectedList from '../../ConnectedList'
 
 const USERS_LIMIT = 200
@@ -39,6 +39,10 @@ const GET_USERS = gql`
   }
 `
 
+const filters = {
+  dateRange: ['createdAt'],
+}
+
 export default class UsersList extends Component {
   render() {
     return (
@@ -48,24 +52,25 @@ export default class UsersList extends Component {
         namespace={'users'}
       >
         {({
-          formValue,
-          // disabledFilters,
+          filterValues,
+          disabledFilters,
           loading,
           error,
           items,
           handleChange,
-          // toggleField,
+          handleToggleFilter,
         }) => {
-          const {
-            search,
-            dateRange,
-            orderBy,
-          } = formValue
+          const { orderBy } = filterValues
           return (
             <div>
-              <TableForm
-                value={{ search, dateRange }}
-                onChange={handleChange}
+              <FilterForm
+                filters={filters}
+                value={filterValues}
+                onToggleFilter={
+                  handleToggleFilter
+                }
+                disabled={disabledFilters}
+                onSubmit={handleChange}
               />
               {items && (
                 <TableHead

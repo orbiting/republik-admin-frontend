@@ -4,8 +4,8 @@ import gql from 'graphql-tag'
 import { Spinner } from '@project-r/styleguide'
 import ConnectedList from '../../ConnectedList'
 import ErrorMessage from '../../ErrorMessage'
+import FilterForm from '../../Form/FilterForm'
 
-import TableForm from './TableForm'
 import TableHead from './TableHead'
 import TableBody from './TableBody'
 import UploadForm from './UploadForm'
@@ -93,6 +93,15 @@ const GET_POSTFINANCE_PAYMENTS = gql`
 
 const POSTFINANCE_PAYMENTS_LIMIT = 200
 
+const filters = {
+  dateRange: [
+    'buchungsdatum',
+    'valuta',
+    'createdAt',
+  ],
+  boolean: ['matched'],
+}
+
 export default class PostfinancePayments extends Component {
   constructor(props) {
     super(props)
@@ -135,24 +144,25 @@ export default class PostfinancePayments extends Component {
         namespace={'postfinancePayments'}
       >
         {({
-          formValue,
-          // disabledFilters,
+          filterValues,
+          disabledFilters,
           loading,
           error,
           items,
           handleChange,
-          // toggleField,
+          handleToggleFilter,
         }) => {
-          const {
-            search,
-            dateRange,
-            orderBy,
-          } = formValue
+          const { orderBy } = filterValues
           return (
             <div>
-              <TableForm
-                value={{ search, dateRange }}
-                onChange={handleChange}
+              <FilterForm
+                filters={filters}
+                value={filterValues}
+                onToggleFilter={
+                  handleToggleFilter
+                }
+                disabled={disabledFilters}
+                onSubmit={handleChange}
               />
               {items && (
                 <TableHead
