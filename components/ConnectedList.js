@@ -9,14 +9,13 @@ export default class List extends Component {
     this.state = {
       disabledFilters: {
         dateRange: true,
-        orderBy: true,
         stringArray: true,
         boolean: true,
       },
+      orderBy: null,
       filterValues: {
         search: '',
         dateRange: null,
-        orderBy: null,
         stringArray: null,
         boolean: null,
       },
@@ -32,14 +31,18 @@ export default class List extends Component {
         },
       })
 
-    this.handleChange = value => {
+    this.handleFilter = value =>
       this.setState({
         filterValues: {
           ...this.state.filterValues,
           ...value,
         },
       })
-    }
+
+    this.handleOrderBy = value =>
+      this.setState({
+        orderBy: value,
+      })
 
     this.updateQuery = (
       previousResult,
@@ -74,13 +77,14 @@ export default class List extends Component {
 
   render() {
     const {
+      filterValues,
       filterValues: {
-        orderBy,
         dateRange,
         search,
         stringArray,
         boolean,
       },
+      orderBy,
       disabledFilters,
     } = this.state
 
@@ -99,9 +103,7 @@ export default class List extends Component {
           limit: limit,
           offset: 0,
           search,
-          orderBy: !disabledFilters.orderBy
-            ? orderBy
-            : null,
+          orderBy,
           dateRange: !disabledFilters.dateRange
             ? dateRange
             : null,
@@ -148,14 +150,16 @@ export default class List extends Component {
               useWindow={false}
             >
               {children({
-                filterValues: this.state,
-                disabledFilters,
                 loading: isLoading,
                 error,
                 items,
-                handleChange: this.handleChange,
+                filterValues,
+                orderBy,
+                disabledFilters,
+                handleFilter: this.handleFilter,
                 handleToggleFilter: this
                   .handleToggleFilter,
+                handleOrderBy: this.handleOrderBy,
               })}
             </InfiniteScroller>
           )

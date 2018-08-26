@@ -3,8 +3,8 @@ import gql from 'graphql-tag'
 import { Spinner } from '@project-r/styleguide'
 
 import ErrorMessage from '../../ErrorMessage'
-import TableHead from './TableHead'
-import TableBody from './TableBody'
+import TableBody from '../../Form/TableBody'
+import TableHead from '../../Form/TableHead'
 import FilterForm from '../../Form/FilterForm'
 import ConnectedList from '../../ConnectedList'
 
@@ -43,6 +43,42 @@ const filters = {
   dateRange: ['createdAt'],
 }
 
+const table = [
+  [
+    'email',
+    {
+      width: '40%',
+      orderable: true,
+      label: 'Email',
+    },
+  ],
+  [
+    'firstName',
+    {
+      width: '20%',
+      orderable: true,
+      label: 'First name',
+    },
+  ],
+  [
+    'lastName',
+    {
+      width: '20%',
+      orderable: true,
+      label: 'Last name',
+    },
+  ],
+  [
+    'createdAt',
+    {
+      width: '10%',
+      orderable: true,
+      label: 'Created',
+    },
+  ],
+  ['options', { width: '10%', label: 'Detail' }],
+]
+
 export default class UsersList extends Component {
   render() {
     return (
@@ -53,14 +89,16 @@ export default class UsersList extends Component {
       >
         {({
           filterValues,
+          orderBy,
           disabledFilters,
           loading,
           error,
           items,
-          handleChange,
+          handleFilter,
+          handleOrderBy,
           handleToggleFilter,
         }) => {
-          const { orderBy } = filterValues
+          console.log(disabledFilters)
           return (
             <div>
               <FilterForm
@@ -70,14 +108,13 @@ export default class UsersList extends Component {
                   handleToggleFilter
                 }
                 disabled={disabledFilters}
-                onSubmit={handleChange}
+                onSubmit={handleFilter}
               />
               {items && (
                 <TableHead
-                  sort={orderBy}
-                  onSort={v =>
-                    handleChange({ orderBy: v })
-                  }
+                  fields={table}
+                  value={orderBy}
+                  onChange={handleOrderBy}
                 />
               )}
               {error ? (
@@ -87,7 +124,10 @@ export default class UsersList extends Component {
                   <Spinner />
                 </div>
               ) : items ? (
-                <TableBody items={items} />
+                <TableBody
+                  fields={table}
+                  items={items}
+                />
               ) : null}
             </div>
           )
