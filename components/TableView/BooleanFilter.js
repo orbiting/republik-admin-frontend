@@ -46,7 +46,7 @@ const styles = {
   }),
 }
 
-export class Form extends Component {
+export default class BooleanFilter extends Component {
   constructor(props) {
     super(props)
     this.state = this.props.value || {
@@ -133,8 +133,4 @@ export class Form extends Component {
       </div>
     )
   }
-}
-
-export default {
-  Form,
 }

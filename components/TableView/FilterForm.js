@@ -7,9 +7,10 @@ import {
   Checkbox,
 } from '@project-r/styleguide'
 
-import DateRange from './DateRange'
-import StringArray from './StringArray'
-import Boolean from './Boolean'
+import DateRangeFilter from './DateRangeFilter'
+import StringArrayFilter from './StringArrayFilter'
+import BooleanFilter from './BooleanFilter'
+import { withToggle } from '../Form/toggle'
 
 const styles = {
   container: css({
@@ -37,7 +38,7 @@ const styles = {
   }),
 }
 
-export default class TableForm extends Component {
+class FilterForm extends Component {
   constructor(props) {
     super(props)
     this.state = this.props.value || {
@@ -45,13 +46,6 @@ export default class TableForm extends Component {
       dateRange: null,
       stringArray: null,
       boolean: null,
-      showFilters: false,
-    }
-
-    this.handleToggleForm = () => {
-      this.setState({
-        showFilters: !this.state.showFilters,
-      })
     }
 
     this.handleSearch = (_, value) => {
@@ -120,13 +114,13 @@ export default class TableForm extends Component {
         let FilterField
         switch (filterType) {
           case 'dateRange':
-            FilterField = DateRange.Form
+            FilterField = DateRangeFilter
             break
           case 'stringArray':
-            FilterField = StringArray.Form
+            FilterField = StringArrayFilter
             break
           case 'boolean':
-            FilterField = Boolean.Form
+            FilterField = BooleanFilter
             break
           default:
             return (
@@ -144,8 +138,12 @@ export default class TableForm extends Component {
   }
 
   render() {
-    const { searchLabel } = this.props
-    const { search, showFilters } = this.state
+    const {
+      searchLabel,
+      isShowFiltersToggled,
+      toggleShowFilters,
+    } = this.props
+    const { search } = this.state
     return (
       <form
         {...styles.container}
@@ -166,14 +164,14 @@ export default class TableForm extends Component {
           />
         </div>
         <Label
-          onClick={this.handleToggleForm}
+          onClick={toggleShowFilters}
           {...styles.showMoreButton}
         >
-          {showFilters
+          {isShowFiltersToggled
             ? 'Hide filters ...'
             : 'Show filters ...'}
         </Label>
-        {showFilters && (
+        {isShowFiltersToggled && (
           <Fragment>
             {this.renderFilters()}
             <Button type="submit">Go!</Button>
@@ -183,3 +181,7 @@ export default class TableForm extends Component {
     )
   }
 }
+
+export default withToggle({
+  namespace: 'showFilters',
+})(FilterForm)

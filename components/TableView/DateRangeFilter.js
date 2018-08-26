@@ -42,7 +42,7 @@ const standardDate = rawDate =>
 const localDate = rawDate =>
   moment(rawDate).format('YYYY-MM-DD')
 
-export class Form extends Component {
+export default class DateRangeFilter extends Component {
   constructor(props) {
     super(props)
 
@@ -147,8 +147,4 @@ export class Form extends Component {
       </div>
     )
   }
-}
-
-export default {
-  Form,
 }

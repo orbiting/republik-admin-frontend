@@ -6,10 +6,13 @@ import routes from '../../server/routes'
 const { Link } = routes
 
 import ErrorMessage from '../ErrorMessage'
-import TableBody from '../Form/TableBody'
-import TableHead from '../Form/TableHead'
-import FilterForm from '../Form/FilterForm'
-import ConnectedList from '../ConnectedList'
+
+import {
+  TableView,
+  TableHead,
+  TableBody,
+  FilterForm,
+} from '../TableView'
 
 const displayDate = rawDate => {
   const date = new Date(rawDate)
@@ -109,7 +112,7 @@ const renderTableField = fieldName => {
 export default class UsersList extends Component {
   render() {
     return (
-      <ConnectedList
+      <TableView
         enforceSearch
         query={GET_USERS}
         limit={USERS_LIMIT}
@@ -158,7 +161,7 @@ export default class UsersList extends Component {
             </div>
           )
         }}
-      </ConnectedList>
+      </TableView>
     )
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Query } from 'react-apollo'
 import InfiniteScroller from 'react-infinite-scroller'
-import { withTableControl } from './Form'
+import { withTableControl } from './tableControl'
 
 const createUpdateQuery = namespace => (
   previousResult,

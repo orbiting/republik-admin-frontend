@@ -12,10 +12,13 @@ import routes from '../../server/routes'
 const { Link } = routes
 
 import ErrorMessage from '../ErrorMessage'
-import ConnectedList from '../ConnectedList'
-import TableHead from '../Form/TableHead'
-import TableBody from '../Form/TableBody'
-import FilterForm from '../Form/FilterForm'
+
+import {
+  TableView,
+  TableHead,
+  TableBody,
+  FilterForm,
+} from '../TableView'
 
 import CSVDownloader from './CSVDownloader'
 
@@ -197,7 +200,7 @@ const renderTableField = fieldName => {
 }
 
 export default () => (
-  <ConnectedList
+  <TableView
     query={GET_PAYMENTS}
     limit={PAYMENTS_LIMIT}
     namespace={'payments'}
@@ -246,5 +249,5 @@ export default () => (
         </div>
       )
     }}
-  </ConnectedList>
+  </TableView>
 )

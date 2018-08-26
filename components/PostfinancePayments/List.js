@@ -6,12 +6,14 @@ import {
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { chfFormat } from '../../lib/utils/formats'
-import ConnectedList from '../ConnectedList'
 import ErrorMessage from '../ErrorMessage'
-import FilterForm from '../Form/FilterForm'
 
-import TableHead from '../Form/TableHead'
-import TableBody from '../Form/TableBody'
+import {
+  TableView,
+  TableHead,
+  TableBody,
+  FilterForm,
+} from '../TableView'
 
 import MessageField from './MessageField'
 import Options from './Options'
@@ -161,7 +163,7 @@ const renderTableField = fieldName => {
 export default class PostfinancePaymentsList extends Component {
   render() {
     return (
-      <ConnectedList
+      <TableView
         query={GET_POSTFINANCE_PAYMENTS}
         limit={POSTFINANCE_PAYMENTS_LIMIT}
         namespace={'postfinancePayments'}
@@ -236,7 +238,7 @@ export default class PostfinancePaymentsList extends Component {
             </div>
           )
         }}
-      </ConnectedList>
+      </TableView>
     )
   }
 }
