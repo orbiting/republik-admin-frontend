@@ -122,26 +122,24 @@ export default class UsersList extends Component {
           loading,
           error,
           items,
-          handleFilter,
-          handleOrderBy,
-          handleToggleFilter,
+          updateFilters,
+          updateOrderBy,
+          toggleFilter,
         }) => {
           return (
             <div>
               <FilterForm
                 filters={filters}
                 value={filterValues}
-                onToggleFilter={
-                  handleToggleFilter
-                }
+                onToggleFilter={toggleFilter}
                 disabled={disabledFilters}
-                onSubmit={handleFilter}
+                onSubmit={updateFilters}
               />
               {items && (
                 <TableHead
                   fields={table}
                   value={orderBy}
-                  onChange={handleOrderBy}
+                  onChange={updateOrderBy}
                 />
               )}
               {error ? (

@@ -4,32 +4,43 @@ import React from 'react'
 import { compose } from 'react-apollo'
 
 import { ApolloProvider } from 'react-apollo'
-import withData from '../lib/withData'
+import { Provider as ReduxProvider } from 'react-redux'
+import withApolloClient from '../lib/withApolloClient'
+import withReduxStore from '../lib/withReduxStore'
 import { enforceAuthorization } from '../components/Auth/withAuthorization'
-const withAdminUser = enforceAuthorization(['supporter', 'admin', 'accountant'])
+const withAdminUser = enforceAuthorization([
+  'supporter',
+  'admin',
+  'accountant',
+])
 
 class MyApp extends App {
-  render () {
+  render() {
     const {
       Component,
       pageProps,
       router,
-      apolloClient
+      apolloClient,
+      reduxStore,
     } = this.props
     const DecoratedComp = withAdminUser(Component)
     return (
       <Container>
-        <ApolloProvider client={apolloClient}>
-          <DecoratedComp
-            {...pageProps}
-            url={router}
-          />
-        </ApolloProvider>
+        <ReduxProvider store={reduxStore}>
+          <ApolloProvider client={apolloClient}>
+            <DecoratedComp
+              {...pageProps}
+              url={router}
+            />
+          </ApolloProvider>
+        </ReduxProvider>
       </Container>
     )
   }
 }
 
-export default compose(withData, withRouter)(
-  MyApp
-)
+export default compose(
+  withApolloClient,
+  withReduxStore,
+  withRouter
+)(MyApp)

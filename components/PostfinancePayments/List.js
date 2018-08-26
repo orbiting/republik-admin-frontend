@@ -174,9 +174,9 @@ export default class PostfinancePaymentsList extends Component {
           orderBy,
           disabledFilters,
           items,
-          handleFilter,
-          handleOrderBy,
-          handleToggleFilter,
+          updateFilters,
+          updateOrderBy,
+          toggleFilter,
         }) => {
           const innerRenderTableField = fieldName => {
             switch (fieldName) {
@@ -203,11 +203,9 @@ export default class PostfinancePaymentsList extends Component {
               <FilterForm
                 filters={filters}
                 value={filterValues}
-                onToggleFilter={
-                  handleToggleFilter
-                }
+                onToggleFilter={toggleFilter}
                 disabled={disabledFilters}
-                onSubmit={handleFilter}
+                onSubmit={updateFilters}
               />
               <CSVImport />
               <Rematch />
@@ -215,7 +213,7 @@ export default class PostfinancePaymentsList extends Component {
                 <TableHead
                   fields={table}
                   value={orderBy}
-                  onChange={handleOrderBy}
+                  onChange={updateOrderBy}
                 />
               )}
               {error ? (
