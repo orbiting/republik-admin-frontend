@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { css } from 'glamor'
 import {
   Label,
@@ -21,7 +21,7 @@ export default class TableBody extends Component {
     return <Label>{value}</Label>
   }
 
-  renderField(field, value, opts) {
+  renderField(item, field, value, opts) {
     const { renderField } = this.props
     const { width } = opts
 
@@ -30,6 +30,7 @@ export default class TableBody extends Component {
     }
 
     const innerProps = {
+      item,
       field,
       value,
     }
@@ -48,16 +49,17 @@ export default class TableBody extends Component {
   renderRow(item) {
     const { fields } = this.props
     return (
-      <Row {...styles.row} key={item.id}>
+      <Fragment>
         {fields.map(v => {
           const [field, opts] = v
           return this.renderField(
+            item,
             field,
             item[field],
             opts
           )
         })}
-      </Row>
+      </Fragment>
     )
   }
 
@@ -65,9 +67,14 @@ export default class TableBody extends Component {
     const { items } = this.props
     return (
       <Table>
-        {items.map(item => {
-          return this.renderRow(item)
-        })}
+        {items.map((item, i) => (
+          <Row
+            key={`${item.id}-${i}`}
+            {...styles.row}
+          >
+            {this.renderRow(item)}
+          </Row>
+        ))}
       </Table>
     )
   }

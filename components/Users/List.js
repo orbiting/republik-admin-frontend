@@ -1,12 +1,24 @@
 import React, { Component } from 'react'
 import gql from 'graphql-tag'
-import { Spinner } from '@project-r/styleguide'
+import {
+  Spinner,
+  Label,
+} from '@project-r/styleguide'
 
-import ErrorMessage from '../../ErrorMessage'
-import TableBody from '../../Form/TableBody'
-import TableHead from '../../Form/TableHead'
-import FilterForm from '../../Form/FilterForm'
-import ConnectedList from '../../ConnectedList'
+import routes from '../../server/routes'
+const { Link } = routes
+
+import ErrorMessage from '../ErrorMessage'
+import TableBody from '../Form/TableBody'
+import TableHead from '../Form/TableHead'
+import FilterForm from '../Form/FilterForm'
+import ConnectedList from '../ConnectedList'
+
+const displayDate = rawDate => {
+  const date = new Date(rawDate)
+  return `${date.getDate()}.${date.getMonth() +
+    1}.${date.getFullYear()}`
+}
 
 const USERS_LIMIT = 200
 
@@ -79,6 +91,26 @@ const table = [
   ['options', { width: '10%', label: 'Detail' }],
 ]
 
+const renderTableField = fieldName => {
+  switch (fieldName) {
+    case 'createdAt':
+      return ({ value }) => (
+        <Label>{displayDate(value)}</Label>
+      )
+    case 'options':
+      return ({ item: user }) => (
+        <Link
+          route="user"
+          params={{ userId: user.id }}
+        >
+          <a style={{ cursor: 'pointer' }}>
+            Zum User
+          </a>
+        </Link>
+      )
+  }
+}
+
 export default class UsersList extends Component {
   render() {
     return (
@@ -126,6 +158,7 @@ export default class UsersList extends Component {
                 <TableBody
                   fields={table}
                   items={items}
+                  renderField={renderTableField}
                 />
               ) : null}
             </div>
