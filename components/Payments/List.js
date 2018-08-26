@@ -2,7 +2,7 @@ import React from 'react'
 import gql from 'graphql-tag'
 import {
   Spinner,
-  Label,
+  A,
   colors,
 } from '@project-r/styleguide'
 
@@ -171,22 +171,16 @@ const table = [
 const renderTableField = fieldName => {
   switch (fieldName) {
     case 'createdAt':
-      return ({ value }) => (
-        <Label>{displayDate(value)}</Label>
-      )
+      return ({ value }) => displayDate(value)
     case 'total':
-      return ({ value }) => (
-        <Label>{chfFormat(value)}</Label>
-      )
+      return ({ value }) => chfFormat(value)
+
     case 'dueDate':
-      return ({ item: payment }) => (
-        <Label>
-          {getDueDate(
-            payment.status,
-            payment.dueDate
-          )}
-        </Label>
-      )
+      return ({ item: payment }) =>
+        getDueDate(
+          payment.status,
+          payment.dueDate
+        )
     case 'options':
       return ({ item: payment }) =>
         payment.user && (
@@ -194,9 +188,9 @@ const renderTableField = fieldName => {
             route="user"
             params={{ userId: payment.user.id }}
           >
-            <a style={{ cursor: 'pointer' }}>
+            <A style={{ cursor: 'pointer' }}>
               Zum User
-            </a>
+            </A>
           </Link>
         )
   }

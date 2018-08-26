@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import gql from 'graphql-tag'
-import {
-  Spinner,
-  Label,
-} from '@project-r/styleguide'
+import { Spinner, A } from '@project-r/styleguide'
 
 import routes from '../../server/routes'
 const { Link } = routes
@@ -94,18 +91,16 @@ const table = [
 const renderTableField = fieldName => {
   switch (fieldName) {
     case 'createdAt':
-      return ({ value }) => (
-        <Label>{displayDate(value)}</Label>
-      )
+      return ({ value }) => displayDate(value)
     case 'options':
       return ({ item: user }) => (
         <Link
           route="user"
           params={{ userId: user.id }}
         >
-          <a style={{ cursor: 'pointer' }}>
+          <A style={{ cursor: 'pointer' }}>
             Zum User
-          </a>
+          </A>
         </Link>
       )
   }

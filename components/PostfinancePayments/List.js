@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import gql from 'graphql-tag'
-import { Spinner } from '@project-r/styleguide'
+import {
+  Spinner,
+  Label,
+} from '@project-r/styleguide'
+import { css } from 'glamor'
 import { chfFormat } from '../../lib/utils/formats'
 import ConnectedList from '../ConnectedList'
 import ErrorMessage from '../ErrorMessage'
@@ -136,6 +140,19 @@ const renderTableField = fieldName => {
       return ({ value }) => displayDate(value)
     case 'gutschrift':
       return ({ value }) => chfFormat(value / 100)
+    case 'avisierungstext':
+      return ({ value }) => (
+        <Label
+          {...css({
+            whiteSpace: 'pre-line',
+            padding: '3px',
+          })}
+        >
+          {value
+            .split(/mitteilungen:\s?/i)
+            .join('\nMitteilungen:\n')}
+        </Label>
+      )
     case 'matched':
       return ({ value }) => (value ? 'Yes' : 'No')
   }

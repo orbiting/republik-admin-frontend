@@ -1,15 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import { css } from 'glamor'
-import {
-  Label,
-  colors,
-} from '@project-r/styleguide'
+import { colors } from '@project-r/styleguide'
 import { Table, Row, Cell } from '../Layout/Table'
 
 const styles = {
   row: css({
-    maxHeight: '230px',
-    padding: '10px 0',
+    padding: '0 5px',
     '&:nth-child(odd)': {
       backgroundColor: colors.secondaryBg,
     },
@@ -18,7 +14,7 @@ const styles = {
 
 export default class TableBody extends Component {
   renderInner({ value }) {
-    return <Label>{value}</Label>
+    return value
   }
 
   renderField(item, field, value, opts) {
