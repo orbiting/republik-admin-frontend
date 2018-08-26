@@ -1,137 +1,122 @@
 import React, { Component } from 'react'
-import { withApollo } from 'react-apollo'
-import ApolloClient from 'apollo-client'
+import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import { css } from 'glamor'
-import ErrorMessage from '../../ErrorMessage'
-import { colors } from '@project-r/styleguide'
+import ErrorMessage from '../ErrorMessage'
+import {
+  colors,
+  InlineSpinner,
+  Dropdown,
+  Button,
+} from '@project-r/styleguide'
 
 const companies = [
-  { label: 'Project R', name: 'PROJECT_R' },
-  { label: 'Republik AG', name: 'REPUBLIK' }
+  { text: 'Republik AG', value: 'REPUBLIK' },
+  { text: 'Project R', value: 'PROJECT_R' },
 ]
 
 const link = css({
   textDecoration: 'none',
   color: colors.primary,
   ':visited': {
-    color: colors.primary
+    color: colors.primary,
   },
   ':hover': {
-    color: colors.secondary
-  }
+    color: colors.secondary,
+  },
 })
 
-const query = gql`
+const GET_PAYMENTS_CSV = gql`
   query paymentsCSV($companyName: String!) {
     paymentsCSV(companyName: $companyName)
   }
 `
 
-class CSVDownloader extends Component {
+export default class CSVDownloader extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      csv: null,
-      loading: false,
-      error: null,
-      companyName: companies[0].name
+      csvRequested: false,
+      selectedCompany: companies[0],
     }
-  }
 
-  setCompany = event => {
-    const companyName = event.target.value
-    this.setState(() => ({
-      companyName: companyName
-    }))
-  }
-
-  query = () => {
-    this.setState(() => ({
-      loading: true
-    }))
-
-    const { companyName } = this.state
-    this.props.client
-      .query({
-        query,
-        variables: { companyName },
-        fetchPolicy: 'network-only'
+    this.handleCompany = v =>
+      this.setState({
+        csvRequested: false,
+        selectedCompany: v,
       })
-      .then(({ data }) => {
-        this.setState(() => ({
-          loading: false,
-          csv: data.paymentsCSV
-        }))
-      })
-      .catch(error => {
-        this.setState(() => ({
-          error
-        }))
+
+    this.handleCsvRequest = () =>
+      this.setState({
+        csvRequested: true,
       })
   }
 
-  reset = () => {
-    setTimeout(() => {
-      this.setState(() => ({
-        csv: null
-      }))
-    }, 1000)
+  renderDownloadLink(paymentsCSV) {
+    const blob = new Blob([paymentsCSV], {
+      type: 'text/csv',
+    })
+    const url = URL.createObjectURL(blob)
+
+    return (
+      <a
+        className={`${link}`}
+        download="export.csv"
+        href={url}
+      >
+        Download CSV
+      </a>
+    )
   }
 
   render() {
-    if (this.state.error) {
-      return (
-        <ErrorMessage error={this.state.error} />
-      )
-    }
-    if (!this.state.csv) {
-      if (this.state.loading) {
-        return <p>Loading ...</p>
-      } else {
-        return (
-          <div>
-            <select
-              name="companyName"
-              value={this.state.companyName}
-              onChange={this.setCompany}
-            >
-              {companies.map(
-                ({ name, label }) => (
-                  <option key={name} value={name}>
-                    {label}
-                  </option>
-                )
-              )}
-            </select>
-            <button
-              style={{ cursor: 'pointer' }}
-              className={`${link}`}
-              onClick={this.query}
-            >
-              Get CSV for selected legal entity
-            </button>
-          </div>
-        )
-      }
-    } else {
-      const blob = new Blob([this.state.csv], {
-        type: 'text/csv'
-      })
-      const url = URL.createObjectURL(blob)
+    const {
+      selectedCompany,
+      csvRequested,
+    } = this.state
+    return (
+      <Query
+        query={GET_PAYMENTS_CSV}
+        skip={!csvRequested}
+        variables={{
+          companyName: selectedCompany.value,
+        }}
+      >
+        {({ data, loading, error }) => {
+          const { paymentsCSV } = data || {}
 
-      return (
-        <a
-          className={`${link}`}
-          download="export.csv"
-          href={url}
-          onClick={this.reset}
-        >
-          Download CSV
-        </a>
-      )
-    }
+          return (
+            <div>
+              {error && (
+                <ErrorMessage error={error} />
+              )}
+              <Dropdown.Native
+                label={'Company'}
+                value={selectedCompany.value}
+                items={companies}
+                onChange={this.handleCompany}
+              />
+              {csvRequested &&
+                paymentsCSV &&
+                !loading &&
+                this.renderDownloadLink(
+                  paymentsCSV
+                )}
+              {!paymentsCSV && (
+                <Button
+                  onClick={this.handleCsvRequest}
+                >
+                  {(!csvRequested &&
+                    'Get CSV Export') ||
+                    (loading && (
+                      <InlineSpinner />
+                    ))}
+                </Button>
+              )}
+            </div>
+          )
+        }}
+      </Query>
+    )
   }
 }
-
-export default withApollo(CSVDownloader)

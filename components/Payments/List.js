@@ -17,6 +17,8 @@ import TableHead from '../Form/TableHead'
 import TableBody from '../Form/TableBody'
 import FilterForm from '../Form/FilterForm'
 
+import CSVDownloader from './CSVDownloader'
+
 const displayDate = rawDate => {
   const date = new Date(rawDate)
   return `${date.getDate()}.${date.getMonth() +
@@ -226,6 +228,7 @@ export default () => (
             disabled={disabledFilters}
             onSubmit={handleFilter}
           />
+          <CSVDownloader />
           {items && (
             <TableHead
               fields={table}
