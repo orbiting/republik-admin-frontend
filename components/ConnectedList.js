@@ -77,6 +77,14 @@ export default class List extends Component {
 
   render() {
     const {
+      query,
+      limit,
+      namespace,
+      enforceSearch,
+      children,
+    } = this.props
+
+    const {
       filterValues,
       filterValues: {
         dateRange,
@@ -88,17 +96,10 @@ export default class List extends Component {
       disabledFilters,
     } = this.state
 
-    const {
-      query,
-      limit,
-      namespace,
-      children,
-    } = this.props
-
     return (
       <Query
         query={query}
-        skip={!search}
+        skip={enforceSearch && !search}
         variables={{
           limit: limit,
           offset: 0,
@@ -120,6 +121,7 @@ export default class List extends Component {
           loading,
           error,
           networkStatus,
+          refetch,
           fetchMore,
         }) => {
           const { items, count } =
@@ -150,8 +152,11 @@ export default class List extends Component {
               useWindow={false}
             >
               {children({
+                data,
                 loading: isLoading,
                 error,
+                refetch,
+                // Non apollo
                 items,
                 filterValues,
                 orderBy,

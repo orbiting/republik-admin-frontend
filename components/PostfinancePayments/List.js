@@ -1,12 +1,24 @@
 import React, { Component } from 'react'
 import gql from 'graphql-tag'
 import { Spinner } from '@project-r/styleguide'
+import { chfFormat } from '../../lib/utils/formats'
 import ConnectedList from '../ConnectedList'
 import ErrorMessage from '../ErrorMessage'
 import FilterForm from '../Form/FilterForm'
 
 import TableHead from '../Form/TableHead'
 import TableBody from '../Form/TableBody'
+
+import MessageField from './MessageField'
+import Options from './Options'
+import CSVImport from './CSVImport'
+import Rematch from './Rematch'
+
+const displayDate = rawDate => {
+  const date = new Date(rawDate)
+  return `${date.getDate()}.${date.getMonth() +
+    1}.${date.getFullYear()}`
+}
 
 const GET_POSTFINANCE_PAYMENTS = gql`
   query postfinancePayments(
@@ -81,7 +93,7 @@ const table = [
   [
     'gutschrift',
     {
-      width: '30%',
+      width: '10%',
       orderable: true,
       label: 'Gutschrift',
     },
@@ -109,9 +121,27 @@ const table = [
       label: 'Created',
     },
   ],
+  [
+    'options',
+    {
+      width: '10%',
+      label: 'Options',
+    },
+  ],
 ]
 
-export default class PostfinanPaymentsList extends Component {
+const renderTableField = fieldName => {
+  switch (fieldName) {
+    case 'createdAt':
+      return ({ value }) => displayDate(value)
+    case 'gutschrift':
+      return ({ value }) => chfFormat(value / 100)
+    case 'matched':
+      return ({ value }) => (value ? 'Yes' : 'No')
+  }
+}
+
+export default class PostfinancePaymentsList extends Component {
   render() {
     return (
       <ConnectedList
@@ -120,16 +150,37 @@ export default class PostfinanPaymentsList extends Component {
         namespace={'postfinancePayments'}
       >
         {({
+          loading,
+          error,
+          refetch,
           filterValues,
           orderBy,
           disabledFilters,
-          loading,
-          error,
           items,
           handleFilter,
           handleOrderBy,
           handleToggleFilter,
         }) => {
+          const innerRenderTableField = fieldName => {
+            switch (fieldName) {
+              case 'mitteilung':
+                return ({ item }) => (
+                  <MessageField
+                    postfinancePayment={item}
+                    refetchQueries={refetch}
+                  />
+                )
+              case 'options':
+                return ({ item }) => (
+                  <Options
+                    postfinancePayment={item}
+                    refetchQueries={refetch}
+                  />
+                )
+              default:
+                return renderTableField(fieldName)
+            }
+          }
           return (
             <div>
               <FilterForm
@@ -141,6 +192,8 @@ export default class PostfinanPaymentsList extends Component {
                 disabled={disabledFilters}
                 onSubmit={handleFilter}
               />
+              <CSVImport />
+              <Rematch />
               {items && (
                 <TableHead
                   fields={table}
@@ -156,8 +209,13 @@ export default class PostfinanPaymentsList extends Component {
                 </div>
               ) : items ? (
                 <TableBody
+                  renderField={
+                    innerRenderTableField
+                  }
                   fields={table}
-                  items={items}
+                  items={items.filter(
+                    v => !v.hidden
+                  )}
                 />
               ) : null}
             </div>

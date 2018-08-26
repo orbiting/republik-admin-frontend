@@ -144,6 +144,7 @@ export default class TableForm extends Component {
   }
 
   render() {
+    const { searchLabel } = this.props
     const { search, showFilters } = this.state
     return (
       <form
@@ -152,11 +153,14 @@ export default class TableForm extends Component {
       >
         <div {...styles.searchField}>
           <Field
-            label="Search"
             type="text"
             value={search}
             renderInput={props => (
-              <input {...props} autoFocus />
+              <input
+                {...props}
+                autoFocus
+                placeholder={searchLabel}
+              />
             )}
             onChange={this.handleSearch}
           />

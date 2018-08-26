@@ -115,6 +115,7 @@ export default class UsersList extends Component {
   render() {
     return (
       <ConnectedList
+        enforceSearch
         query={GET_USERS}
         limit={USERS_LIMIT}
         namespace={'users'}
