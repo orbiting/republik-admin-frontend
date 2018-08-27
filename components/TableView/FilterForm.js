@@ -61,9 +61,9 @@ class FilterForm extends Component {
     return (
       <div
         key={filterType}
-        {...styles.toggleDisplay}
+        {...styles.toggleFilterDisplay}
       >
-        <span {...styles.toggleInput}>
+        <span {...styles.toggleFilterInput}>
           <Checkbox
             checked={!disabled[filterType]}
             onChange={(_, v) =>
@@ -72,6 +72,7 @@ class FilterForm extends Component {
             }
           />
         </span>
+
         {filter}
       </div>
     )

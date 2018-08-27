@@ -76,7 +76,7 @@ export default class DateRangeFilter extends Component {
         </Interaction.P>
         <div {...styles.hBox}>
           <div {...styles.cell}>
-            {fields.length > 1 ? (
+            {fields.length > 1 && !disabled ? (
               <Dropdown.Native
                 label={'Column'}
                 value={field}
@@ -92,8 +92,16 @@ export default class DateRangeFilter extends Component {
             ) : (
               <Field
                 label={'Column'}
-                value={fields[0]}
-                disabled
+                value={field}
+                renderInput={props => (
+                  <input
+                    type="text"
+                    disabled
+                    {...props}
+                    {...disabled &&
+                      styles.disabledFilter}
+                  />
+                )}
               />
             )}
           </div>
@@ -103,7 +111,15 @@ export default class DateRangeFilter extends Component {
               label="From"
               value={from}
               type="date"
-              disabled={disabled}
+              renderInput={props => (
+                <input
+                  type="date"
+                  disabled={disabled}
+                  {...props}
+                  {...disabled &&
+                    styles.disabledFilter}
+                />
+              )}
               onChange={this.handleStartDate}
             />
           </div>
@@ -113,7 +129,15 @@ export default class DateRangeFilter extends Component {
               label="Until"
               value={to}
               type="date"
-              disabled={disabled}
+              renderInput={props => (
+                <input
+                  type="date"
+                  disabled={disabled}
+                  {...disabled &&
+                    styles.disabledFilter}
+                  {...props}
+                />
+              )}
               onChange={this.handleEndDate}
             />
           </div>

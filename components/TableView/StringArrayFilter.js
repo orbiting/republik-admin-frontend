@@ -74,7 +74,7 @@ export default class StringArrayFilter extends Component {
         </Interaction.P>
         <div {...styles.hBox}>
           <div {...styles.cellOne}>
-            {fields.length > 1 ? (
+            {fields.length > 1 && !disabled ? (
               <Dropdown.Native
                 label={'Column'}
                 value={field}
@@ -90,8 +90,16 @@ export default class StringArrayFilter extends Component {
             ) : (
               <Field
                 label={'Column'}
-                value={fields[0]}
-                disabled
+                value={field}
+                renderInput={props => (
+                  <input
+                    type="text"
+                    disabled
+                    {...props}
+                    {...disabled &&
+                      styles.disabledFilter}
+                  />
+                )}
               />
             )}
           </div>

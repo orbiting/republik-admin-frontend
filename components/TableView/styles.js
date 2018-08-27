@@ -63,10 +63,13 @@ export default {
       marginLeft: '10px',
     },
   }),
-  toggleDisplay: css({
+  disabledFilter: css({
+    color: colors.disabled,
+  }),
+  toggleFilterDisplay: css({
     position: 'relative',
   }),
-  toggleInput: css({
+  toggleFilterInput: css({
     position: 'absolute',
     left: '-30px',
     top: '6px',
