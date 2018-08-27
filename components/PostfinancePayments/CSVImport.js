@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {
   colors,
   InlineSpinner,
-  Interaction,
+  Label,
   Field,
   Button,
 } from '@project-r/styleguide'
@@ -124,9 +124,11 @@ export default class CSVImport extends Component {
               }
             }}
           >
-            <Interaction.P>
+            <Label
+              {...tableViewStyles.filterTitle}
+            >
               Import Postfinance CSV
-            </Interaction.P>
+            </Label>
             <div {...tableViewStyles.hBox}>
               <div {...tableViewStyles.cellTwo}>
                 <input

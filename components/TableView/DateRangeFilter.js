@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {
   Field,
   Dropdown,
-  Interaction,
+  Label,
 } from '@project-r/styleguide'
 import moment from 'moment'
 
@@ -71,9 +71,9 @@ export default class DateRangeFilter extends Component {
 
     return (
       <div {...styles.container}>
-        <Interaction.P>
+        <Label {...styles.filterTitle}>
           Filter by date
-        </Interaction.P>
+        </Label>
         <div {...styles.hBox}>
           <div {...styles.cell}>
             {fields.length > 1 && !disabled ? (

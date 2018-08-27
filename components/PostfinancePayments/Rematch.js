@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   InlineSpinner,
-  Interaction,
+  Label,
   Button,
 } from '@project-r/styleguide'
 import { Mutation } from 'react-apollo'
@@ -21,9 +21,9 @@ export default ({ refetchQueries }) => (
   >
     {(rematch, { loading, data }) => (
       <div {...tableViewStyles.container}>
-        <Interaction.P>
+        <Label {...tableViewStyles.filterTitle}>
           Rematch Payments
-        </Interaction.P>
+        </Label>
         <div {...tableViewStyles.hBox}>
           <div {...tableViewStyles.cellTwo} />
           <div {...tableViewStyles.cell}>

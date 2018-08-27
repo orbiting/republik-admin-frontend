@@ -63,6 +63,16 @@ export default {
       marginLeft: '10px',
     },
   }),
+  filterTitle: css({
+    display: 'block',
+    textTransform: 'uppercase',
+    marginBottom: '12px',
+  }),
+  submitFilter: css({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  }),
   disabledFilter: css({
     color: colors.disabled,
   }),
@@ -72,6 +82,6 @@ export default {
   toggleFilterInput: css({
     position: 'absolute',
     left: '-30px',
-    top: '6px',
+    // top: '6px',
   }),
 }

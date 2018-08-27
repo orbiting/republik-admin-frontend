@@ -6,7 +6,7 @@ import ErrorMessage from '../ErrorMessage'
 import {
   colors,
   InlineSpinner,
-  Interaction,
+  Label,
   Dropdown,
   Button,
 } from '@project-r/styleguide'
@@ -90,9 +90,9 @@ export default class CSVDownloader extends Component {
 
           return (
             <div {...styles.container}>
-              <Interaction.P>
+              <Label {...styles.filterTitle}>
                 Export CSV
-              </Interaction.P>
+              </Label>
               {error && (
                 <ErrorMessage error={error} />
               )}

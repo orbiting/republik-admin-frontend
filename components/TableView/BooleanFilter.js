@@ -4,7 +4,6 @@ import {
   Label,
   Field,
   Checkbox,
-  Interaction,
 } from '@project-r/styleguide'
 import styles from './styles'
 
@@ -50,9 +49,9 @@ export default class BooleanFilter extends Component {
 
     return (
       <div {...styles.container}>
-        <Interaction.P>
+        <Label {...styles.filterTitle}>
           Filter by status
-        </Interaction.P>
+        </Label>
         <div {...styles.hBox}>
           <div {...styles.cellOne}>
             {fields.length > 1 && !disabled ? (
