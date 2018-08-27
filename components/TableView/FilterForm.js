@@ -6,6 +6,8 @@ import {
   Checkbox,
 } from '@project-r/styleguide'
 
+import SearchIcon from './SearchIcon'
+
 import DateRangeFilter from './DateRangeFilter'
 import StringArrayFilter from './StringArrayFilter'
 import BooleanFilter from './BooleanFilter'
@@ -129,7 +131,10 @@ class FilterForm extends Component {
         <div {...styles.searchField}>
           <Field
             type="text"
+            isFocused={true}
+            label="Search"
             value={search}
+            icon={<SearchIcon size="20" />}
             renderInput={props => (
               <input
                 {...props}

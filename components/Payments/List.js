@@ -240,6 +240,7 @@ export default () => (
       return (
         <div>
           <FilterForm
+            searchLabel="Search for payments..."
             namespace={'showPaymentFilters'}
             filters={filters}
             value={filterValues}

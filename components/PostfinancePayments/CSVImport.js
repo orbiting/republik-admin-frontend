@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import {
+  colors,
   InlineSpinner,
+  Interaction,
   Field,
   Button,
 } from '@project-r/styleguide'
@@ -8,10 +10,14 @@ import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { css } from 'glamor'
 
+import tableViewStyles from '../TableView/styles'
+
 const styles = {
   label: css({
-    lineHeight: '33px',
-    display: 'inline-block',
+    lineHeight: '39px',
+    display: 'block',
+    borderBottom: `1px solid ${colors.disabled}`,
+    minHeight: '39px',
   }),
   fileInput: css({
     width: 0,
@@ -108,6 +114,7 @@ export default class CSVImport extends Component {
           { loading, data }
         ) => (
           <form
+            {...tableViewStyles.container}
             onSubmit={e => {
               e.preventDefault()
               if (csv) {
@@ -117,46 +124,57 @@ export default class CSVImport extends Component {
               }
             }}
           >
-            <input
-              id="csv-input"
-              {...styles.fileInput}
-              type="file"
-              accept="application/csv"
-              name="csv"
-              onChange={e => this.handleFile(e)}
-            />
-            <div {...styles.fileField}>
-              <Field
-                disabled={loading}
-                label={
-                  <label htmlFor="csv-input">
-                    Select CSV-File
-                  </label>
-                }
-                value={filename}
-                renderInput={({
-                  value,
-                  props,
-                }) => (
-                  <label
-                    {...props}
-                    {...styles.label}
-                    htmlFor="csv-input"
-                  >
-                    {value}
-                  </label>
-                )}
-              />
+            <Interaction.P>
+              Import Postfinance CSV
+            </Interaction.P>
+            <div {...tableViewStyles.hBox}>
+              <div {...tableViewStyles.cellTwo}>
+                <input
+                  id="csv-input"
+                  {...styles.fileInput}
+                  type="file"
+                  accept="application/csv"
+                  name="csv"
+                  onChange={e =>
+                    this.handleFile(e)
+                  }
+                />
+                <div {...styles.fileField}>
+                  <Field
+                    disabled={loading}
+                    label={
+                      <label htmlFor="csv-input">
+                        Select CSV-File
+                      </label>
+                    }
+                    value={filename}
+                    renderInput={({
+                      value,
+                      props,
+                    }) => (
+                      <label
+                        {...props}
+                        {...styles.label}
+                        htmlFor="csv-input"
+                      >
+                        {value}
+                      </label>
+                    )}
+                  />
+                </div>
+              </div>
+              <div {...tableViewStyles.cellOne}>
+                <Button
+                  disabled={loading}
+                  type="submit"
+                >
+                  {(loading && (
+                    <InlineSpinner size="18px" />
+                  )) ||
+                    'Upload'}
+                </Button>
+              </div>
             </div>
-            <Button
-              disabled={loading}
-              type="submit"
-            >
-              {(loading && (
-                <InlineSpinner size="18px" />
-              )) ||
-                'Upload'}
-            </Button>
           </form>
         )}
       </Mutation>

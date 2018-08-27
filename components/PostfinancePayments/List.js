@@ -223,6 +223,7 @@ export default class PostfinancePaymentsList extends Component {
           return (
             <div>
               <FilterForm
+                searchLabel="Search for Postfinance payments..."
                 filters={filters}
                 value={filterValues}
                 onToggleFilter={toggleFilter}

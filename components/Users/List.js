@@ -132,6 +132,7 @@ export default class UsersList extends Component {
           return (
             <div>
               <FilterForm
+                searchLabel="Search for users..."
                 filters={filters}
                 value={filterValues}
                 onToggleFilter={toggleFilter}

@@ -6,9 +6,12 @@ import ErrorMessage from '../ErrorMessage'
 import {
   colors,
   InlineSpinner,
+  Interaction,
   Dropdown,
   Button,
 } from '@project-r/styleguide'
+
+import styles from '../TableView/styles'
 
 const companies = [
   { text: 'Republik AG', value: 'REPUBLIK' },
@@ -86,33 +89,44 @@ export default class CSVDownloader extends Component {
           const { paymentsCSV } = data || {}
 
           return (
-            <div>
+            <div {...styles.container}>
+              <Interaction.P>
+                Export CSV
+              </Interaction.P>
               {error && (
                 <ErrorMessage error={error} />
               )}
-              <Dropdown.Native
-                label={'Company'}
-                value={selectedCompany.value}
-                items={companies}
-                onChange={this.handleCompany}
-              />
-              {csvRequested &&
-                paymentsCSV &&
-                !loading &&
-                this.renderDownloadLink(
-                  paymentsCSV
-                )}
-              {!paymentsCSV && (
-                <Button
-                  onClick={this.handleCsvRequest}
-                >
-                  {(!csvRequested &&
-                    'Get CSV Export') ||
-                    (loading && (
-                      <InlineSpinner />
-                    ))}
-                </Button>
-              )}
+              <div {...styles.hBox}>
+                <div {...styles.cellTwo}>
+                  <Dropdown.Native
+                    label={'Company'}
+                    value={selectedCompany.value}
+                    items={companies}
+                    onChange={this.handleCompany}
+                  />
+                </div>
+                <div {...styles.cellOne}>
+                  {csvRequested &&
+                    paymentsCSV &&
+                    !loading &&
+                    this.renderDownloadLink(
+                      paymentsCSV
+                    )}
+                  {!paymentsCSV && (
+                    <Button
+                      onClick={
+                        this.handleCsvRequest
+                      }
+                    >
+                      {(!csvRequested &&
+                        'Get CSV Export') ||
+                        (loading && (
+                          <InlineSpinner />
+                        ))}
+                    </Button>
+                  )}
+                </div>
+              </div>
             </div>
           )
         }}
