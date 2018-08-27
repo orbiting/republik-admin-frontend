@@ -17,6 +17,7 @@ const styles = {
     width: 0,
     height: 0,
     opacity: 0,
+    position: 'absolute',
   }),
   fileField: css({
     height: '64px',

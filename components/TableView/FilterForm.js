@@ -68,7 +68,7 @@ class FilterForm extends Component {
             checked={!disabled[filterType]}
             onChange={(_, v) =>
               onToggleFilter &&
-              onToggleFilter(filterType, v)
+              onToggleFilter(filterType, !v)
             }
           />
         </span>
@@ -78,10 +78,11 @@ class FilterForm extends Component {
   }
 
   renderFilters() {
-    const { filters } = this.props
+    const { filters, disabled } = this.props
     return Object.keys(filters).map(
       filterType => {
         const filterFieldProps = {
+          disabled: disabled[filterType],
           fields: filters[filterType],
           value: this.state[filterType],
           onChange: this.handleFilter(filterType),

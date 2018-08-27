@@ -45,50 +45,50 @@ export default class BooleanFilter extends Component {
   }
 
   render() {
-    const { fields } = this.props
+    const { fields, disabled } = this.props
     const { field, value } = this.state
 
     return (
-      <div>
+      <div {...styles.container}>
         <Interaction.P>
           Filter by status
         </Interaction.P>
-        <div {...styles.container}>
-          <div {...styles.hBox}>
-            <div {...styles.cellOne}>
-              {fields.length > 1 ? (
-                <Dropdown.Native
-                  label={'Column'}
-                  value={field}
-                  items={fields.map(v => ({
-                    value: v[0],
-                    text: v[0],
-                  }))}
-                  onChange={
-                    this.handleSelectedField
-                  }
-                />
-              ) : (
-                <Field
-                  label={'Column'}
-                  value={fields[0]}
-                  disabled
-                />
-              )}
-            </div>
-            <div {...styles.cellTwo}>
-              <Label {...styles.statusLabel}>
-                Status
-              </Label>
-              <div {...styles.vBox}>
-                <Checkbox
-                  name={field}
-                  checked={value}
-                  onChange={this.handleChange}
-                >
-                  {'Set to true'}
-                </Checkbox>
-              </div>
+        <div {...styles.hBox}>
+          <div {...styles.cellOne}>
+            {fields.length > 1 ? (
+              <Dropdown.Native
+                label={'Column'}
+                value={field}
+                disabled={disabled}
+                items={fields.map(v => ({
+                  value: v[0],
+                  text: v[0],
+                }))}
+                onChange={
+                  this.handleSelectedField
+                }
+              />
+            ) : (
+              <Field
+                label={'Column'}
+                value={fields[0]}
+                disabled
+              />
+            )}
+          </div>
+          <div {...styles.cellTwo}>
+            <Label {...styles.statusLabel}>
+              Status
+            </Label>
+            <div {...styles.vBox}>
+              <Checkbox
+                name={field}
+                checked={value}
+                disabled={disabled}
+                onChange={this.handleChange}
+              >
+                {'Set to true'}
+              </Checkbox>
             </div>
           </div>
         </div>

@@ -50,6 +50,7 @@ export const reducer = (
 ) => {
   const state =
     rootState[namespace] || initialState
+
   switch (type) {
     case TOGGLE_FILTER:
       return {
@@ -58,7 +59,7 @@ export const reducer = (
           ...state,
           disabledFilters: {
             ...state.disabledFilters,
-            [payload.filterName]: payload.value,
+            [payload.filterType]: payload.value,
           },
         },
       }

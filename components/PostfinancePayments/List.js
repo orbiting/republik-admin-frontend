@@ -8,12 +8,14 @@ import { css } from 'glamor'
 import { chfFormat } from '../../lib/utils/formats'
 import ErrorMessage from '../ErrorMessage'
 
+import { withToggle } from '../Form/toggle'
 import {
   TableView,
   TableHead,
   TableBody,
   FilterForm,
 } from '../TableView'
+import tableViewStyles from '../TableView/styles'
 
 import MessageField from './MessageField'
 import Options from './Options'
@@ -160,6 +162,24 @@ const renderTableField = fieldName => {
   }
 }
 
+const Actions = withToggle({
+  namespace: 'showPostfinancePaymentActions',
+})(({ isToggled, toggle, children }) => {
+  return (
+    <div {...tableViewStyles.formContainer}>
+      <Label
+        onClick={toggle}
+        {...tableViewStyles.interactive}
+      >
+        {isToggled
+          ? 'Hide actions ...'
+          : 'Show actions ...'}
+      </Label>
+      {isToggled && children}
+    </div>
+  )
+})
+
 export default class PostfinancePaymentsList extends Component {
   render() {
     return (
@@ -209,8 +229,10 @@ export default class PostfinancePaymentsList extends Component {
                 disabled={disabledFilters}
                 onSubmit={updateFilters}
               />
-              <CSVImport />
-              <Rematch />
+              <Actions>
+                <CSVImport />
+                <Rematch />
+              </Actions>
               {items && (
                 <TableHead
                   fields={table}

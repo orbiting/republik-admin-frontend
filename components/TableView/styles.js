@@ -7,8 +7,7 @@ export default {
     margin: '0 auto 4px auto',
   }),
   container: css({
-    padding: '8px 8px 0 8px',
-    backgroundColor: colors.secondaryBg,
+    margin: '20px 0 10px 0',
   }),
   hBox: css({
     display: 'flex',
@@ -69,6 +68,7 @@ export default {
   }),
   toggleInput: css({
     position: 'absolute',
-    left: '-20px',
+    left: '-30px',
+    top: '6px',
   }),
 }

@@ -17,7 +17,8 @@ export default class StringArrayFilter extends Component {
       values: [],
     }
 
-    this.handleSelectedField = ({ value }) => {
+    this.handleSelectedField = event => {
+      const value = event.target.value
       this.setState(
         () => ({
           field: value,
@@ -66,63 +67,55 @@ export default class StringArrayFilter extends Component {
     const selectedField = fields.find(
       v => v && v[0] === field
     )
-
     return (
-      <div>
+      <div {...styles.container}>
         <Interaction.P>
           Filter by enum
         </Interaction.P>
-        <div {...styles.container}>
-          <div {...styles.hBox}>
-            <div {...styles.cellOne}>
-              {fields.length > 1 ? (
-                <Dropdown.Native
-                  label={'Column'}
-                  value={field}
-                  disabled={disabled}
-                  items={fields.map(value => ({
-                    value: value[0],
-                    text: value[0],
-                  }))}
-                  onChange={
-                    this.handleSelectedField
-                  }
-                />
-              ) : (
-                <Field
-                  label={'Column'}
-                  value={fields[0]}
-                  disabled
-                />
-              )}
-            </div>
-            <div {...styles.cellTwo}>
-              <Label {...styles.statusLabel}>
-                Status
-              </Label>
-              <div {...styles.vBox}>
-                {selectedField
-                  ? selectedField[1].map(
-                      choice => (
-                        <Checkbox
-                          disabled={disabled}
-                          key={choice}
-                          name={choice}
-                          checked={
-                            values.indexOf(
-                              choice
-                            ) >= 0
-                          }
-                          onChange={
-                            this.handleChoice
-                          }
-                        >
-                          {choice}
-                        </Checkbox>
-                      )
-                    )
-                  : null}
-              </div>
+        <div {...styles.hBox}>
+          <div {...styles.cellOne}>
+            {fields.length > 1 ? (
+              <Dropdown.Native
+                label={'Column'}
+                value={field}
+                disabled={disabled}
+                items={fields.map(value => ({
+                  value: value[0],
+                  text: value[0],
+                }))}
+                onChange={
+                  this.handleSelectedField
+                }
+              />
+            ) : (
+              <Field
+                label={'Column'}
+                value={fields[0]}
+                disabled
+              />
+            )}
+          </div>
+          <div {...styles.cellTwo}>
+            <Label {...styles.statusLabel}>
+              Status
+            </Label>
+            <div {...styles.vBox}>
+              {selectedField
+                ? selectedField[1].map(choice => (
+                    <Checkbox
+                      disabled={disabled}
+                      key={choice}
+                      name={choice}
+                      checked={
+                        values.indexOf(choice) >=
+                        0
+                      }
+                      onChange={this.handleChoice}
+                    >
+                      {choice}
+                    </Checkbox>
+                  ))
+                : null}
             </div>
           </div>
         </div>
