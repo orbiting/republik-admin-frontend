@@ -1,23 +1,10 @@
 import React, { Component, Fragment } from 'react'
 import Sticky from 'react-sticky-el'
-import {
-  Label,
-  colors,
-} from '@project-r/styleguide'
-import { css } from 'glamor'
+import { Label } from '@project-r/styleguide'
 import { Table, Row, Cell } from '../Layout/Table'
 import SortIndicator from './SortIndicator'
 
-const styles = {
-  row: css({
-    maxHeight: '40px',
-    backgroundColor: '#fff',
-    borderBottom: `1px solid ${colors.divider}`,
-  }),
-  interactive: css({
-    cursor: 'pointer',
-  }),
-}
+import styles from './styles'
 
 export default class TabledHead extends Component {
   createHandleOrderBy(field) {
@@ -107,7 +94,7 @@ export default class TabledHead extends Component {
     return (
       <Sticky scrollElement="#content">
         <Table>
-          <Row {...styles.row}>
+          <Row {...styles.thead}>
             {this.renderFields()}
           </Row>
         </Table>

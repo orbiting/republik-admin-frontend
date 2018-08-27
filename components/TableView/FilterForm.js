@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import { css } from 'glamor'
 import {
   Field,
   Button,
@@ -12,31 +11,7 @@ import StringArrayFilter from './StringArrayFilter'
 import BooleanFilter from './BooleanFilter'
 import { withToggle } from '../Form/toggle'
 
-const styles = {
-  container: css({
-    maxWidth: '600px',
-    margin: '20px auto 40px auto',
-  }),
-  showMoreButton: css({
-    display: 'block',
-    cursor: 'pointer',
-  }),
-  searchField: css({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    '& > *:not(:first-child)': {
-      marginLeft: '10px',
-    },
-  }),
-  toggleDisplay: css({
-    position: 'relative',
-  }),
-  toggleInput: css({
-    position: 'absolute',
-    left: '-20px',
-  }),
-}
+import styles from './styles'
 
 class FilterForm extends Component {
   constructor(props) {
@@ -140,13 +115,13 @@ class FilterForm extends Component {
   render() {
     const {
       searchLabel,
-      isShowFiltersToggled,
-      toggleShowFilters,
+      isToggled,
+      toggle,
     } = this.props
     const { search } = this.state
     return (
       <form
-        {...styles.container}
+        {...styles.formContainer}
         onSubmit={this.handleSubmit}
       >
         <div {...styles.searchField}>
@@ -164,14 +139,14 @@ class FilterForm extends Component {
           />
         </div>
         <Label
-          onClick={toggleShowFilters}
-          {...styles.showMoreButton}
+          onClick={toggle}
+          {...styles.interactive}
         >
-          {isShowFiltersToggled
+          {isToggled
             ? 'Hide filters ...'
             : 'Show filters ...'}
         </Label>
-        {isShowFiltersToggled && (
+        {isToggled && (
           <Fragment>
             {this.renderFilters()}
             <Button type="submit">Go!</Button>

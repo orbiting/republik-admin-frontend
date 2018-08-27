@@ -1,40 +1,12 @@
 import React, { Component } from 'react'
 import {
-  colors,
   Field,
   Dropdown,
   Interaction,
 } from '@project-r/styleguide'
-import { css } from 'glamor'
 import moment from 'moment'
 
-const styles = {
-  mask: css({
-    '::placeholder': {
-      color: 'transparent',
-    },
-    ':focus': {
-      '::placeholder': {
-        color: '#ccc',
-      },
-    },
-  }),
-  container: css({
-    padding: '8px 8px 0 8px',
-    backgroundColor: colors.secondaryBg,
-  }),
-  hBox: css({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    alignItems: 'stretch',
-    alignContent: 'stretch',
-  }),
-  cell: css({
-    width: '33%',
-  }),
-}
+import styles from './styles'
 
 const standardDate = rawDate =>
   moment(rawDate).format('YYYY-MM-DD')

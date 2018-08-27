@@ -1,18 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
 import { Table, Row, Cell } from '../Layout/Table'
 
-const styles = {
-  row: css({
-    padding: '10px 0px',
-    width: '100%',
-    flexwWrap: 'nowrap',
-    '&:nth-child(odd)': {
-      backgroundColor: colors.secondaryBg,
-    },
-  }),
-}
+import styles from './styles'
 
 export default class TableBody extends Component {
   renderInner({ value }) {
@@ -68,7 +57,7 @@ export default class TableBody extends Component {
         {items.map((item, i) => (
           <Row
             key={`${item.id}-${i}`}
-            {...styles.row}
+            {...styles.trow}
           >
             {this.renderRow(item)}
           </Row>

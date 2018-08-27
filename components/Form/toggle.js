@@ -3,28 +3,35 @@ import { connect } from 'react-redux'
 
 export const TOGGLE = 'TOGGLE'
 
-const capitalize = ([s, ...tring]) =>
-  [s.toUpperCase(), ...tring].join('')
-
 export const createToggle = namespace => () => ({
   type: TOGGLE,
   namespace,
 })
 
-const mapStateToProps = namespace => ({
-  toggle: state,
-}) => ({
-  [`is${capitalize(namespace)}Toggled`]: state[
-    namespace
-  ],
-})
+const mapStateToProps = namespaceFromConfig => (
+  { toggle: state },
+  { namespace: namespaceFromProps }
+) => {
+  const namespace =
+    namespaceFromProps || namespaceFromConfig
+  return {
+    isToggled: state[namespace],
+  }
+}
 
-const mapDispatchToProps = namespace => dispatch => ({
-  [`toggle${capitalize(namespace)}`]: compose(
-    dispatch,
-    createToggle(namespace)
-  ),
-})
+const mapDispatchToProps = namespaceFromConfig => (
+  dispatch,
+  { namespace: namespaceFromProps }
+) => {
+  const namespace =
+    namespaceFromProps || namespaceFromConfig
+  return {
+    toggle: compose(
+      dispatch,
+      createToggle(namespace)
+    ),
+  }
+}
 
 export const withToggle = ({ namespace }) =>
   connect(

@@ -4,6 +4,7 @@ import {
   Spinner,
   A,
   colors,
+  Label,
 } from '@project-r/styleguide'
 
 import { chfFormat } from '../../lib/utils/formats'
@@ -19,6 +20,8 @@ import {
   TableBody,
   FilterForm,
 } from '../TableView'
+import tableViewStyles from '../TableView/styles'
+import { withToggle } from '../Form/toggle'
 
 import CSVDownloader from './CSVDownloader'
 
@@ -171,6 +174,24 @@ const table = [
   ],
 ]
 
+const Actions = withToggle({
+  namespace: 'showPaymentActions',
+})(({ isToggled, toggle, children }) => {
+  return (
+    <div {...tableViewStyles.formContainer}>
+      <Label
+        onClick={toggle}
+        {...tableViewStyles.interactive}
+      >
+        {isToggled
+          ? 'Hide actions ...'
+          : 'Show actions ...'}
+      </Label>
+      {isToggled && children}
+    </div>
+  )
+})
+
 const renderTableField = fieldName => {
   switch (fieldName) {
     case 'createdAt':
@@ -219,13 +240,16 @@ export default () => (
       return (
         <div>
           <FilterForm
+            namespace={'showPaymentFilters'}
             filters={filters}
             value={filterValues}
             onToggleFilter={toggleFilter}
             disabled={disabledFilters}
             onSubmit={updateFilters}
           />
-          <CSVDownloader />
+          <Actions>
+            <CSVDownloader />
+          </Actions>
           {items && (
             <TableHead
               fields={table}

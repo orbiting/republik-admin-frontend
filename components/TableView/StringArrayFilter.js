@@ -1,57 +1,13 @@
 import React, { Component } from 'react'
 import {
-  colors,
   Label,
   Checkbox,
   Dropdown,
   Field,
   Interaction,
 } from '@project-r/styleguide'
-import { css } from 'glamor'
 
-const styles = {
-  mask: css({
-    '::placeholder': {
-      color: 'transparent',
-    },
-    ':focus': {
-      '::placeholder': {
-        color: '#ccc',
-      },
-    },
-  }),
-  container: css({
-    padding: '8px 8px 0 8px',
-    backgroundColor: colors.secondaryBg,
-  }),
-  hBox: css({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    alignItems: 'stretch',
-    alignContent: 'stretch',
-  }),
-  cellOne: css({
-    width: '33%',
-  }),
-  cellTwo: css({
-    width: '66%',
-  }),
-  statusLabel: css({
-    display: 'block',
-    color: colors.disabled,
-    marginTop: '3px',
-    marginBottom: '4px',
-  }),
-  vBox: css({
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
-    flexDirection: 'column',
-    maxHeight: '80px',
-  }),
-}
+import styles from './styles'
 
 export default class StringArrayFilter extends Component {
   constructor(props) {

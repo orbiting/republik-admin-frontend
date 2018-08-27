@@ -1,50 +1,12 @@
 import React, { Component } from 'react'
 import {
-  colors,
   Dropdown,
   Label,
   Field,
   Checkbox,
   Interaction,
 } from '@project-r/styleguide'
-import { css } from 'glamor'
-
-const styles = {
-  mask: css({
-    '::placeholder': {
-      color: 'transparent',
-    },
-    ':focus': {
-      '::placeholder': {
-        color: '#ccc',
-      },
-    },
-  }),
-  container: css({
-    padding: '8px 8px 0 8px',
-    backgroundColor: colors.secondaryBg,
-  }),
-  hBox: css({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    alignItems: 'stretch',
-    alignContent: 'stretch',
-  }),
-  statusLabel: css({
-    display: 'block',
-    color: colors.disabled,
-    marginTop: '3px',
-    marginBottom: '4px',
-  }),
-  cellOne: css({
-    width: '33%',
-  }),
-  cellTwo: css({
-    width: '66%',
-  }),
-}
+import styles from './styles'
 
 export default class BooleanFilter extends Component {
   constructor(props) {
