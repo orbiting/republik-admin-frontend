@@ -3,8 +3,8 @@ import { colors } from '@project-r/styleguide'
 
 export default {
   formContainer: css({
-    maxWidth: '600px',
-    margin: '0 auto 4px auto',
+    maxWidth: '700px',
+    margin: '0 auto 3px auto',
   }),
   container: css({
     margin: '20px 0 10px 0',
