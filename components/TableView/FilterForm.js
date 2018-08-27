@@ -125,7 +125,7 @@ class FilterForm extends Component {
     const { search } = this.state
     return (
       <form
-        {...styles.formContainer}
+        {...styles.form}
         onSubmit={this.handleSubmit}
       >
         <div {...styles.searchField}>

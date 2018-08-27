@@ -70,7 +70,7 @@ export default class DateRangeFilter extends Component {
     const { field, from, to } = this.state
 
     return (
-      <div {...styles.container}>
+      <div {...styles.formSection}>
         <Label {...styles.filterTitle}>
           Filter by date
         </Label>

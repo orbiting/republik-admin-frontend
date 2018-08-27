@@ -89,7 +89,7 @@ export default class CSVDownloader extends Component {
           const { paymentsCSV } = data || {}
 
           return (
-            <div {...styles.container}>
+            <div {...styles.formSection}>
               <Label {...styles.filterTitle}>
                 Export CSV
               </Label>

@@ -48,7 +48,7 @@ export default class BooleanFilter extends Component {
     const { field, value } = this.state
 
     return (
-      <div {...styles.container}>
+      <div {...styles.formSection}>
         <Label {...styles.filterTitle}>
           Filter by status
         </Label>

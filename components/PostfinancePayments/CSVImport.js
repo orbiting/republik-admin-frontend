@@ -114,7 +114,7 @@ export default class CSVImport extends Component {
           { loading, data }
         ) => (
           <form
-            {...tableViewStyles.container}
+            {...tableViewStyles.formSection}
             onSubmit={e => {
               e.preventDefault()
               if (csv) {

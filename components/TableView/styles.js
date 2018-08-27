@@ -2,11 +2,11 @@ import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
 
 export default {
-  formContainer: css({
+  form: css({
     maxWidth: '700px',
     margin: '0 auto 3px auto',
   }),
-  container: css({
+  formSection: css({
     margin: '20px 0 10px 0',
   }),
   hBox: css({
@@ -67,6 +67,7 @@ export default {
     display: 'block',
     textTransform: 'uppercase',
     marginBottom: '12px',
+    color: '#000',
   }),
   submitFilter: css({
     display: 'flex',

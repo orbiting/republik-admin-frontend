@@ -67,7 +67,7 @@ export default class StringArrayFilter extends Component {
       v => v && v[0] === field
     )
     return (
-      <div {...styles.container}>
+      <div {...styles.formSection}>
         <Label {...styles.filterTitle}>
           Filter by enum
         </Label>

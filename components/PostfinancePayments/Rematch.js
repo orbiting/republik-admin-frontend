@@ -20,7 +20,7 @@ export default ({ refetchQueries }) => (
     refetchQueries={refetchQueries}
   >
     {(rematch, { loading, data }) => (
-      <div {...tableViewStyles.container}>
+      <div {...tableViewStyles.formSection}>
         <Label {...tableViewStyles.filterTitle}>
           Rematch Payments
         </Label>

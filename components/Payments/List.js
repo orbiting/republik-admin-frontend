@@ -178,7 +178,7 @@ const Actions = withToggle({
   namespace: 'showPaymentActions',
 })(({ isToggled, toggle, children }) => {
   return (
-    <div {...tableViewStyles.formContainer}>
+    <div {...tableViewStyles.form}>
       <Label
         onClick={toggle}
         {...tableViewStyles.interactive}
