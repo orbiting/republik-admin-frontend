@@ -1,7 +1,7 @@
 import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
 
-export default {
+export const tableView = {
   form: css({
     maxWidth: '700px',
     margin: '0 auto 3px auto',

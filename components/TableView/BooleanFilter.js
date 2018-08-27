@@ -5,7 +5,7 @@ import {
   Field,
   Checkbox,
 } from '@project-r/styleguide'
-import styles from './styles'
+import { tableView as styles } from '../styles'
 
 export default class BooleanFilter extends Component {
   constructor(props) {

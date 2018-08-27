@@ -13,7 +13,7 @@ import StringArrayFilter from './StringArrayFilter'
 import BooleanFilter from './BooleanFilter'
 import { withToggle } from '../Form/toggle'
 
-import styles from './styles'
+import { tableView as styles } from '../styles'
 
 class FilterForm extends Component {
   constructor(props) {

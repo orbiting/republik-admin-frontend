@@ -6,7 +6,7 @@ import {
 } from '@project-r/styleguide'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
-import tableViewStyles from '../TableView/styles'
+import { tableView as tableViewStyles } from '../styles'
 
 const REMATCH_PAYMENTS = gql`
   mutation rematchPayments {

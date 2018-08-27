@@ -15,7 +15,7 @@ import {
   TableBody,
   FilterForm,
 } from '../TableView'
-import tableViewStyles from '../TableView/styles'
+import { tableView as tableViewStyles } from '../styles'
 
 import MessageField from './MessageField'
 import Options from './Options'

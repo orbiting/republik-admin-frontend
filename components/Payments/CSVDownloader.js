@@ -11,7 +11,7 @@ import {
   Button,
 } from '@project-r/styleguide'
 
-import styles from '../TableView/styles'
+import { styles as tableViewStyles } from '../styles'
 
 const companies = [
   { text: 'Republik AG', value: 'REPUBLIK' },

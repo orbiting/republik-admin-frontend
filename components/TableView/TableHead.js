@@ -4,7 +4,7 @@ import { Label } from '@project-r/styleguide'
 import { Table, Row, Cell } from '../Layout/Table'
 import SortIndicator from './SortIndicator'
 
-import styles from './styles'
+import { tableView as styles } from '../styles'
 
 export default class TabledHead extends Component {
   createHandleOrderBy(field) {

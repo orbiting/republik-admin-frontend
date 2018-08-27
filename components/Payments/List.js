@@ -20,7 +20,7 @@ import {
   TableBody,
   FilterForm,
 } from '../TableView'
-import tableViewStyles from '../TableView/styles'
+import { tableView as tableViewStyles } from '../styles'
 import { withToggle } from '../Form/toggle'
 
 import CSVDownloader from './CSVDownloader'

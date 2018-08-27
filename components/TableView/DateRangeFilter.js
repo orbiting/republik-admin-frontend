@@ -6,7 +6,7 @@ import {
 } from '@project-r/styleguide'
 import moment from 'moment'
 
-import styles from './styles'
+import { tableView as styles } from '../styles'
 
 const standardDate = rawDate =>
   moment(rawDate).format('YYYY-MM-DD')

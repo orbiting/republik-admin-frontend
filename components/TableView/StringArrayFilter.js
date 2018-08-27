@@ -6,7 +6,7 @@ import {
   Field,
 } from '@project-r/styleguide'
 
-import styles from './styles'
+import { tableView as styles } from '../styles'
 
 export default class StringArrayFilter extends Component {
   constructor(props) {

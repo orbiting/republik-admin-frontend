@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { Table, Row, Cell } from '../Layout/Table'
 
-import styles from './styles'
+import { tableView as styles } from '../styles'
 
 export default class TableBody extends Component {
   renderInner({ value }) {

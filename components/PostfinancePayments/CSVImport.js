@@ -10,7 +10,7 @@ import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { css } from 'glamor'
 
-import tableViewStyles from '../TableView/styles'
+import { tableView as tableViewStyles } from '../styles'
 
 const styles = {
   label: css({
