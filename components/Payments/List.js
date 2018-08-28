@@ -9,7 +9,6 @@ import {
 
 import { chfFormat } from '../../lib/utils/formats'
 import routes from '../../server/routes'
-import ErrorMessage from '../ErrorMessage'
 import { withToggle } from '../Form/toggle'
 
 import { tableView as tableViewStyles } from '../styles'
@@ -268,19 +267,22 @@ export default () => (
               onChange={updateOrderBy}
             />
           )}
-          {error ? (
-            <ErrorMessage error={error} />
-          ) : loading ? (
-            <div style={{ height: 100 }}>
-              <Spinner />
-            </div>
-          ) : items ? (
-            <TableBody
-              renderField={renderTableField}
-              items={items}
-              fields={table}
-            />
-          ) : null}
+
+          {loading && !items && <Spinner />}
+          {items &&
+            !items.length && (
+              <Interaction.P>
+                No results.
+              </Interaction.P>
+            )}
+          {items &&
+            items.length > 0 && (
+              <TableBody
+                fields={table}
+                items={items}
+                renderField={renderTableField}
+              />
+            )}
         </div>
       )
     }}

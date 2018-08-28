@@ -6,7 +6,6 @@ import {
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { chfFormat } from '../../lib/utils/formats'
-import ErrorMessage from '../ErrorMessage'
 
 import { withToggle } from '../Form/toggle'
 import {
@@ -254,23 +253,24 @@ export default class PostfinancePaymentsList extends Component {
                   onChange={updateOrderBy}
                 />
               )}
-              {error ? (
-                <ErrorMessage error={error} />
-              ) : loading ? (
-                <div style={{ height: 100 }}>
-                  <Spinner />
-                </div>
-              ) : items ? (
-                <TableBody
-                  renderField={
-                    innerRenderTableField
-                  }
-                  fields={table}
-                  items={items.filter(
-                    v => !v.hidden
-                  )}
-                />
-              ) : null}
+
+              {loading && !items && <Spinner />}
+              {items &&
+                !items.length && (
+                  <Interaction.P>
+                    No results.
+                  </Interaction.P>
+                )}
+              {items &&
+                items.length > 0 && (
+                  <TableBody
+                    fields={table}
+                    items={items}
+                    renderField={
+                      innerRenderTableField
+                    }
+                  />
+                )}
             </div>
           )
         }}
