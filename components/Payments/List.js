@@ -19,6 +19,7 @@ import {
   TableHead,
   TableBody,
   FilterForm,
+  TableStatus,
 } from '../TableView'
 
 import CSVDownloader from './CSVDownloader'
@@ -233,6 +234,7 @@ export default () => (
       loading,
       error,
       items,
+      count,
       updateFilters,
       updateOrderBy,
       toggleFilter,
@@ -253,6 +255,12 @@ export default () => (
               <CSVDownloader />
             </Actions>
           </div>
+          <TableStatus
+            loading={loading}
+            error={error}
+            items={items}
+            count={count}
+          />
           {items && (
             <TableHead
               fields={table}

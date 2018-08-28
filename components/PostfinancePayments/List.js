@@ -14,6 +14,7 @@ import {
   TableHead,
   TableBody,
   FilterForm,
+  TableStatus,
 } from '../TableView'
 import { tableView as tableViewStyles } from '../styles'
 
@@ -196,6 +197,7 @@ export default class PostfinancePaymentsList extends Component {
           orderBy,
           disabledFilters,
           items,
+          count,
           updateFilters,
           updateOrderBy,
           toggleFilter,
@@ -239,6 +241,12 @@ export default class PostfinancePaymentsList extends Component {
                   <Rematch />
                 </Actions>
               </div>
+              <TableStatus
+                loading={loading}
+                error={error}
+                items={items}
+                count={count}
+              />
               {items && (
                 <TableHead
                   fields={table}

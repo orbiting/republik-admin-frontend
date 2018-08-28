@@ -15,6 +15,7 @@ import {
   TableView,
   TableHead,
   TableBody,
+  TableStatus,
   FilterForm,
 } from '../TableView'
 
@@ -131,6 +132,7 @@ export default class UsersList extends Component {
           loading,
           error,
           items,
+          count,
           updateFilters,
           updateOrderBy,
           toggleFilter,
@@ -153,6 +155,12 @@ export default class UsersList extends Component {
               {error && (
                 <ErrorMessage error={error} />
               )}
+              <TableStatus
+                loading={loading}
+                error={error}
+                items={items}
+                count={count}
+              />
               {items && (
                 <TableHead
                   fields={table}
@@ -160,7 +168,8 @@ export default class UsersList extends Component {
                   onChange={updateOrderBy}
                 />
               )}
-              {loading && <Spinner />}
+
+              {loading && !items && <Spinner />}
               {items &&
                 !items.length && (
                   <Interaction.P>

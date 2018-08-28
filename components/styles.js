@@ -23,6 +23,12 @@ export const tableView = {
       marginLeft: '20px',
     },
   }),
+  tableInfo: css({
+    minHeight: '60px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+  }),
   hBox: css({
     display: 'flex',
     flexDirection: 'row',
