@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import Sticky from 'react-sticky-el'
-import {
-  Label,
-  colors,
-} from '@project-r/styleguide'
+import { Label } from '@project-r/styleguide'
 import { Table, Row, Cell } from '../Layout/Table'
 import SortIndicator from './SortIndicator'
 import { Container as MessageContainer } from './TableMessages'
