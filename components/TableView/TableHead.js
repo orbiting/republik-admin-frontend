@@ -1,10 +1,13 @@
 import React, { Component, Fragment } from 'react'
 import Sticky from 'react-sticky-el'
-import { Label } from '@project-r/styleguide'
+import {
+  Label,
+  colors,
+} from '@project-r/styleguide'
 import { Table, Row, Cell } from '../Layout/Table'
 import SortIndicator from './SortIndicator'
 
-import { tableView as styles } from '../styles'
+import { tableView as tableViewStyles } from '../styles'
 
 export default class TabledHead extends Component {
   createHandleOrderBy(field) {
@@ -40,9 +43,17 @@ export default class TabledHead extends Component {
     }
   }
 
-  renderInner({ label, sortIndicator }) {
+  renderInner({
+    label,
+    orderable,
+    sortIndicator,
+  }) {
     return (
-      <Label>
+      <Label
+        {...(orderable &&
+          tableViewStyles.interactive) ||
+          {}}
+      >
         {label} {sortIndicator}
       </Label>
     )
@@ -53,7 +64,6 @@ export default class TabledHead extends Component {
     const { label, width, orderable } = opts
 
     const cellProps = {
-      ...(styles.interactive || {}),
       onClick:
         orderable &&
         this.createHandleOrderBy(field),
@@ -62,6 +72,7 @@ export default class TabledHead extends Component {
 
     const innerProps = {
       label,
+      orderable,
       sortIndicator: this.renderSortIndicator(
         field
       ),
@@ -94,7 +105,7 @@ export default class TabledHead extends Component {
     return (
       <Sticky scrollElement="#content">
         <Table>
-          <Row {...styles.thead}>
+          <Row {...tableViewStyles.thead}>
             {this.renderFields()}
           </Row>
         </Table>

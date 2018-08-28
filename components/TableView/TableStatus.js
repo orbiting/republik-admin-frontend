@@ -19,11 +19,12 @@ export default ({
     <div {...tableViewStyles.tableInfo}>
       {(items &&
         (loading && (
-          <InlineSpinner size="38px" />
+          <InlineSpinner size="34px" />
         ))) ||
         (error && <ErrorMessage error={error} />)}
       {items &&
-        count && (
+        count &&
+        !loading && (
           <Label>
             Showing {items.length} of {count}{' '}
             results.
