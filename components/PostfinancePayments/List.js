@@ -222,18 +222,23 @@ export default class PostfinancePaymentsList extends Component {
           }
           return (
             <div>
-              <FilterForm
-                searchLabel="Search for Postfinance payments..."
-                filters={filters}
-                value={filterValues}
-                onToggleFilter={toggleFilter}
-                disabled={disabledFilters}
-                onSubmit={updateFilters}
-              />
-              <Actions>
-                <CSVImport />
-                <Rematch />
-              </Actions>
+              <div
+                {...tableViewStyles.formContainer}
+              >
+                <FilterForm
+                  searchLabel="Search for Postfinance payments..."
+                  namespace="postfinancePayment"
+                  filters={filters}
+                  value={filterValues}
+                  onToggleFilter={toggleFilter}
+                  disabled={disabledFilters}
+                  onSubmit={updateFilters}
+                />
+                <Actions>
+                  <CSVImport />
+                  <Rematch />
+                </Actions>
+              </div>
               {items && (
                 <TableHead
                   fields={table}

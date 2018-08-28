@@ -10,6 +10,10 @@ import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { css } from 'glamor'
 
+import {
+  ErrorMessage,
+  SuccessMessage,
+} from '../ErrorMessage'
 import { tableView as tableViewStyles } from '../styles'
 
 const styles = {
@@ -52,6 +56,7 @@ export default class CSVImport extends Component {
       }
       if (file.type.indexOf('csv') < 0) {
         this.setState({
+          filename: file.name,
           error: 'Not a valid CSV file',
         })
       } else {
@@ -59,6 +64,7 @@ export default class CSVImport extends Component {
           .then(({ content, filename }) => {
             this.setState({
               filename,
+              error: null,
               csv: content,
             })
           })
@@ -103,7 +109,11 @@ export default class CSVImport extends Component {
 
   render() {
     const { refetchQueries } = this.props
-    const { csv, filename } = this.state
+    const {
+      csv,
+      filename,
+      error: errorFromState,
+    } = this.state
     return (
       <Mutation
         mutation={IMPORT_POSTFINANCE_CSV}
@@ -111,10 +121,9 @@ export default class CSVImport extends Component {
       >
         {(
           importPostfinanceCSV,
-          { loading, data }
+          { loading, data, error }
         ) => (
           <form
-            {...tableViewStyles.formSection}
             onSubmit={e => {
               e.preventDefault()
               if (csv) {
@@ -124,58 +133,78 @@ export default class CSVImport extends Component {
               }
             }}
           >
-            <Label
-              {...tableViewStyles.filterTitle}
-            >
-              Import Postfinance CSV
-            </Label>
-            <div {...tableViewStyles.hBox}>
-              <div {...tableViewStyles.cellTwo}>
-                <input
-                  id="csv-input"
-                  {...styles.fileInput}
-                  type="file"
-                  accept="application/csv"
-                  name="csv"
-                  onChange={e =>
-                    this.handleFile(e)
-                  }
-                />
-                <div {...styles.fileField}>
-                  <Field
-                    disabled={loading}
-                    label={
-                      <label htmlFor="csv-input">
-                        Select CSV-File
-                      </label>
+            <div {...tableViewStyles.formSection}>
+              <Label
+                {...tableViewStyles.filterTitle}
+              >
+                Import Postfinance CSV
+              </Label>
+              <div {...tableViewStyles.hBox}>
+                <div {...tableViewStyles.cellTwo}>
+                  <input
+                    id="csv-input"
+                    {...styles.fileInput}
+                    type="file"
+                    accept="application/csv"
+                    name="csv"
+                    onChange={e =>
+                      this.handleFile(e)
                     }
-                    value={filename}
-                    renderInput={({
-                      value,
-                      props,
-                    }) => (
-                      <label
-                        {...props}
-                        {...styles.label}
-                        htmlFor="csv-input"
-                      >
-                        {value}
-                      </label>
-                    )}
                   />
+                  <div {...styles.fileField}>
+                    <Field
+                      disabled={loading}
+                      label={
+                        <label htmlFor="csv-input">
+                          Select CSV-File
+                        </label>
+                      }
+                      error={errorFromState}
+                      value={filename}
+                      renderInput={({
+                        value,
+                        props,
+                      }) => (
+                        <label
+                          {...props}
+                          {...styles.label}
+                          htmlFor="csv-input"
+                        >
+                          {value}
+                        </label>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
-              <div {...tableViewStyles.cellOne}>
-                <Button
-                  disabled={loading}
-                  type="submit"
-                >
-                  {(loading && (
-                    <InlineSpinner size="18px" />
-                  )) ||
-                    'Upload'}
-                </Button>
-              </div>
+            </div>
+            <div {...tableViewStyles.formActions}>
+              <Button
+                disabled={
+                  loading ||
+                  !csv ||
+                  errorFromState
+                }
+                type="submit"
+              >
+                {(loading && (
+                  <InlineSpinner size="38px" />
+                )) ||
+                  'Upload'}
+              </Button>
+              {!loading &&
+                !error &&
+                data &&
+                data.importPostfinanceCSV && (
+                  <SuccessMessage
+                    success={
+                      data.importPostfinanceCSV
+                    }
+                  />
+                )}
+              {error && (
+                <ErrorMessage error={error} />
+              )}
             </div>
           </form>
         )}

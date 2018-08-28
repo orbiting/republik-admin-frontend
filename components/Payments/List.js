@@ -8,11 +8,11 @@ import {
 } from '@project-r/styleguide'
 
 import { chfFormat } from '../../lib/utils/formats'
-
 import routes from '../../server/routes'
-const { Link } = routes
-
 import ErrorMessage from '../ErrorMessage'
+import { withToggle } from '../Form/toggle'
+
+import { tableView as tableViewStyles } from '../styles'
 
 import {
   TableView,
@@ -20,10 +20,10 @@ import {
   TableBody,
   FilterForm,
 } from '../TableView'
-import { tableView as tableViewStyles } from '../styles'
-import { withToggle } from '../Form/toggle'
 
 import CSVDownloader from './CSVDownloader'
+
+const { Link } = routes
 
 const displayDate = rawDate => {
   const date = new Date(rawDate)
@@ -239,18 +239,20 @@ export default () => (
     }) => {
       return (
         <div>
-          <FilterForm
-            searchLabel="Search for payments..."
-            namespace={'showPaymentFilters'}
-            filters={filters}
-            value={filterValues}
-            onToggleFilter={toggleFilter}
-            disabled={disabledFilters}
-            onSubmit={updateFilters}
-          />
-          <Actions>
-            <CSVDownloader />
-          </Actions>
+          <div {...tableViewStyles.formContainer}>
+            <FilterForm
+              searchLabel="Search for payments..."
+              namespace={'payments'}
+              filters={filters}
+              value={filterValues}
+              onToggleFilter={toggleFilter}
+              disabled={disabledFilters}
+              onSubmit={updateFilters}
+            />
+            <Actions>
+              <CSVDownloader />
+            </Actions>
+          </div>
           {items && (
             <TableHead
               fields={table}

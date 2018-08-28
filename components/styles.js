@@ -2,12 +2,26 @@ import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
 
 export const tableView = {
+  formContainer: css({
+    width: '100%',
+    margin: '30px 0 80px 0',
+  }),
   form: css({
     maxWidth: '700px',
     margin: '0 auto 3px auto',
   }),
   formSection: css({
     margin: '20px 0 10px 0',
+    minHeight: '110px',
+  }),
+  formActions: css({
+    margin: '15px 0 27px 0',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    '& > *:not(:first-child)': {
+      marginLeft: '20px',
+    },
   }),
   hBox: css({
     display: 'flex',
@@ -67,12 +81,6 @@ export const tableView = {
     display: 'block',
     textTransform: 'uppercase',
     marginBottom: '12px',
-    color: '#000',
-  }),
-  submitFilter: css({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
   }),
   disabledFilter: css({
     color: colors.disabled,

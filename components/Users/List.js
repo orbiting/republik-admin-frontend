@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import gql from 'graphql-tag'
-import { Spinner, A } from '@project-r/styleguide'
+import {
+  Spinner,
+  A,
+  Interaction,
+} from '@project-r/styleguide'
 
 import routes from '../../server/routes'
 const { Link } = routes
@@ -13,6 +17,8 @@ import {
   TableBody,
   FilterForm,
 } from '../TableView'
+
+import { tableView as tableViewStyles } from '../styles'
 
 const displayDate = rawDate => {
   const date = new Date(rawDate)
@@ -131,14 +137,22 @@ export default class UsersList extends Component {
         }) => {
           return (
             <div>
-              <FilterForm
-                searchLabel="Search for users..."
-                filters={filters}
-                value={filterValues}
-                onToggleFilter={toggleFilter}
-                disabled={disabledFilters}
-                onSubmit={updateFilters}
-              />
+              <div
+                {...tableViewStyles.formContainer}
+              >
+                <FilterForm
+                  searchLabel="Search for users..."
+                  namespace="users"
+                  filters={filters}
+                  value={filterValues}
+                  onToggleFilter={toggleFilter}
+                  disabled={disabledFilters}
+                  onSubmit={updateFilters}
+                />
+              </div>
+              {error && (
+                <ErrorMessage error={error} />
+              )}
               {items && (
                 <TableHead
                   fields={table}
@@ -146,19 +160,21 @@ export default class UsersList extends Component {
                   onChange={updateOrderBy}
                 />
               )}
-              {error ? (
-                <ErrorMessage error={error} />
-              ) : loading ? (
-                <div style={{ height: 100 }}>
-                  <Spinner />
-                </div>
-              ) : items ? (
-                <TableBody
-                  fields={table}
-                  items={items}
-                  renderField={renderTableField}
-                />
-              ) : null}
+              {loading && <Spinner />}
+              {items &&
+                !items.length && (
+                  <Interaction.P>
+                    No results.
+                  </Interaction.P>
+                )}
+              {items &&
+                items.length > 0 && (
+                  <TableBody
+                    fields={table}
+                    items={items}
+                    renderField={renderTableField}
+                  />
+                )}
             </div>
           )
         }}

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import { css } from 'glamor'
@@ -11,7 +11,7 @@ import {
   Button,
 } from '@project-r/styleguide'
 
-import { styles as tableViewStyles } from '../styles'
+import { tableView as tableViewStyles } from '../styles'
 
 const companies = [
   { text: 'Republik AG', value: 'REPUBLIK' },
@@ -43,15 +43,22 @@ export default class CSVDownloader extends Component {
       selectedCompany: companies[0],
     }
 
-    this.handleCompany = v =>
+    this.handleCompany = event =>
       this.setState({
         csvRequested: false,
-        selectedCompany: v,
+        selectedCompany: companies.find(
+          ({ value }) =>
+            value === event.target.value
+        ),
       })
 
     this.handleCsvRequest = () =>
       this.setState({
         csvRequested: true,
+      })
+    this.resetCsvRequest = () =>
+      this.setState({
+        csvRequested: false,
       })
   }
 
@@ -65,9 +72,10 @@ export default class CSVDownloader extends Component {
       <a
         className={`${link}`}
         download="export.csv"
+        onClick={this.resetCsvRequest}
         href={url}
       >
-        Download CSV
+        <Button>Download CSV</Button>
       </a>
     )
   }
@@ -89,45 +97,63 @@ export default class CSVDownloader extends Component {
           const { paymentsCSV } = data || {}
 
           return (
-            <div {...styles.formSection}>
-              <Label {...styles.filterTitle}>
-                Export CSV
-              </Label>
-              {error && (
-                <ErrorMessage error={error} />
-              )}
-              <div {...styles.hBox}>
-                <div {...styles.cellTwo}>
-                  <Dropdown.Native
-                    label={'Company'}
-                    value={selectedCompany.value}
-                    items={companies}
-                    onChange={this.handleCompany}
-                  />
-                </div>
-                <div {...styles.cellOne}>
-                  {csvRequested &&
-                    paymentsCSV &&
-                    !loading &&
-                    this.renderDownloadLink(
-                      paymentsCSV
-                    )}
-                  {!paymentsCSV && (
-                    <Button
-                      onClick={
-                        this.handleCsvRequest
+            <Fragment>
+              <div
+                {...tableViewStyles.formSection}
+              >
+                <Label
+                  {...tableViewStyles.filterTitle}
+                >
+                  Export CSV
+                </Label>
+                <div {...tableViewStyles.hBox}>
+                  <div
+                    {...tableViewStyles.cellTwo}
+                  >
+                    <Dropdown.Native
+                      label={'Company'}
+                      value={
+                        selectedCompany.value
                       }
-                    >
-                      {(!csvRequested &&
-                        'Get CSV Export') ||
-                        (loading && (
-                          <InlineSpinner />
-                        ))}
-                    </Button>
-                  )}
+                      items={companies}
+                      onChange={
+                        this.handleCompany
+                      }
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+              <div
+                {...tableViewStyles.formActions}
+              >
+                {csvRequested &&
+                paymentsCSV &&
+                !loading ? (
+                  this.renderDownloadLink(
+                    paymentsCSV
+                  )
+                ) : (
+                  <Button
+                    disabled={
+                      loading && csvRequested
+                    }
+                    onClick={
+                      this.handleCsvRequest
+                    }
+                  >
+                    {(loading &&
+                      csvRequested && (
+                        <InlineSpinner size="38px" />
+                      )) ||
+                      'Get CSV Export'}
+                  </Button>
+                )}
+
+                {error && (
+                  <ErrorMessage error={error} />
+                )}
+              </div>
+            </Fragment>
           )
         }}
       </Query>

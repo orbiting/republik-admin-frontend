@@ -108,6 +108,7 @@ const List = props => {
               refetch,
               // Non apollo
               items,
+              count,
               filterValues,
               orderBy,
               disabledFilters,

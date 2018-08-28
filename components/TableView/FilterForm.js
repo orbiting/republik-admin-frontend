@@ -156,7 +156,7 @@ class FilterForm extends Component {
         {isToggled && (
           <Fragment>
             {this.renderFilters()}
-            <div {...styles.submitFilter}>
+            <div {...styles.formActions}>
               <Button type="submit">
                 Search
               </Button>
