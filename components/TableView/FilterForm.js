@@ -124,45 +124,44 @@ class FilterForm extends Component {
     } = this.props
     const { search } = this.state
     return (
-      <form
-        {...styles.form}
-        onSubmit={this.handleSubmit}
-      >
-        <div {...styles.searchField}>
-          <Field
-            type="text"
-            isFocused={true}
-            label="Search"
-            value={search}
-            icon={<SearchIcon size="20" />}
-            renderInput={props => (
-              <input
-                {...props}
-                autoFocus
-                placeholder={searchLabel}
-              />
-            )}
-            onChange={this.handleSearch}
-          />
+      <form onSubmit={this.handleSubmit}>
+        <div {...styles.form}>
+          <div {...styles.searchField}>
+            <Field
+              type="text"
+              isFocused={true}
+              label="Search"
+              value={search}
+              icon={<SearchIcon size="20" />}
+              renderInput={props => (
+                <input
+                  {...props}
+                  autoFocus
+                  placeholder={searchLabel}
+                />
+              )}
+              onChange={this.handleSearch}
+            />
+          </div>
+          <Label
+            onClick={toggle}
+            {...styles.interactive}
+          >
+            {isToggled
+              ? 'Hide filters ...'
+              : 'Show filters ...'}
+          </Label>
+          {isToggled && (
+            <Fragment>
+              {this.renderFilters()}
+              <div {...styles.formActions}>
+                <Button type="submit">
+                  Search
+                </Button>
+              </div>
+            </Fragment>
+          )}
         </div>
-        <Label
-          onClick={toggle}
-          {...styles.interactive}
-        >
-          {isToggled
-            ? 'Hide filters ...'
-            : 'Show filters ...'}
-        </Label>
-        {isToggled && (
-          <Fragment>
-            {this.renderFilters()}
-            <div {...styles.formActions}>
-              <Button type="submit">
-                Search
-              </Button>
-            </div>
-          </Fragment>
-        )}
       </form>
     )
   }

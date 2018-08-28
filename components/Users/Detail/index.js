@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { compose } from 'react-apollo'
+import { compose } from 'react-apollo'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import { css } from 'glamor'
@@ -8,7 +8,7 @@ import {
   P,
   Label,
   Button,
-  colors
+  colors,
 } from '@project-r/styleguide'
 import ErrorMessage from '../../ErrorMessage'
 import ErrorModal from '../../Form/ErrorModal'
@@ -36,8 +36,8 @@ const styles = {
     ':after': {
       content: '""',
       display: 'table',
-      clear: 'both'
-    }
+      clear: 'both',
+    },
   }),
   span: css({
     boxSizing: 'border-box',
@@ -45,32 +45,32 @@ const styles = {
     paddingLeft: `${GUTTER / 2}px`,
     paddingRight: `${GUTTER / 2}px`,
     minHeight: 1,
-    width: '50%'
+    width: '50%',
   }),
   pledges: css({
     display: 'flex',
     justifyContent: 'space-between',
-    flexFlow: 'row wrap'
+    flexFlow: 'row wrap',
   }),
   pledge: css({
     width: `calc(50% - ${GUTTER}px)`,
     padding: 10,
     backgroundColor: colors.secondaryBg,
-    marginBottom: GUTTER
+    marginBottom: GUTTER,
   }),
   tabNav: css({
-    padding: '30px 0'
+    padding: '30px 0',
   }),
   tabLink: css({
     cursor: 'pointer',
     padding: '15px 0',
     '&.active': {
-      textDecoration: 'underline'
+      textDecoration: 'underline',
     },
     '&:not(:first-child)': {
-      marginLeft: '10px'
-    }
-  })
+      marginLeft: '10px',
+    },
+  }),
 }
 
 const Tab = ({
@@ -103,28 +103,28 @@ class Detail extends Component {
     super(props)
     this.state = {
       errors: {},
-      selectedTab: 'details'
+      selectedTab: 'details',
     }
   }
 
   safe = mutation => variables => {
     mutation(variables).catch(e => {
       this.setState({
-        mutationError: e
+        mutationError: e,
       })
     })
   }
 
   tabLinkHandler = name => () => {
     this.setState(() => ({
-      selectedTab: name
+      selectedTab: name,
     }))
   }
 
   willReceiveProps() {
     this.state = {
       errors: {},
-      selectedTab: this.state.selectedTab
+      selectedTab: this.state.selectedTab,
     }
   }
 
@@ -135,7 +135,10 @@ class Detail extends Component {
       return (
         <ErrorMessage error={props.data.error} />
       )
-    } else if (props.data.loading) {
+    } else if (
+      props.data.loading ||
+      !props.data.user
+    ) {
       return <div>Loading ...</div>
     }
     return (
@@ -157,7 +160,7 @@ class Detail extends Component {
                 error={this.state.mutationError}
                 onClose={() =>
                   this.setState({
-                    mutationError: null
+                    mutationError: null,
                   })
                 }
               />
@@ -234,7 +237,7 @@ class Detail extends Component {
                         <img
                           style={{
                             width: '100%',
-                            maxWidth: '200px'
+                            maxWidth: '200px',
                           }}
                           src={
                             props.data.user
@@ -250,10 +253,12 @@ class Detail extends Component {
                           Statement
                         </Interaction.H3>
                         <P>
-                          «{
+                          «
+                          {
                             props.data.user
                               .statement
-                          }»
+                          }
+                          »
                         </P>
                         <br />
                       </div>
@@ -375,7 +380,7 @@ class Detail extends Component {
             style={{
               backgroundColor: colors.secondaryBg,
               padding: '20px',
-              marginLeft: '10px'
+              marginLeft: '10px',
             }}
           >
             <Notepad
@@ -687,47 +692,51 @@ const WrappedUser = compose(
               {
                 query: userQuery,
                 variables: {
-                  id
-                }
-              }
-            ]
+                  id,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(movePledgeMutation, {
     props: ({
       mutate,
-      ownProps: { params: { userId } }
+      ownProps: {
+        params: { userId },
+      },
     }) => ({
       movePledge: ({
         pledgeId,
-        userId: newUserId
+        userId: newUserId,
       }) => {
         if (mutate) {
           return mutate({
             variables: {
               pledgeId,
-              userId: newUserId
+              userId: newUserId,
             },
             refetchQueries: [
               {
                 query: userQuery,
                 variables: {
-                  id: userId
-                }
-              }
-            ]
+                  id: userId,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(addUserToRoleMutation, {
     props: ({
       mutate,
-      ownProps: { params: { userId } }
+      ownProps: {
+        params: { userId },
+      },
     }) => ({
       addUserToRole: ({ role }) => {
         if (mutate) {
@@ -737,19 +746,21 @@ const WrappedUser = compose(
               {
                 query: userQuery,
                 variables: {
-                  id: userId
-                }
-              }
-            ]
+                  id: userId,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(removeUserFromRoleMutation, {
     props: ({
       mutate,
-      ownProps: { params: { userId } }
+      ownProps: {
+        params: { userId },
+      },
     }) => ({
       removeUserFromRole: ({ role }) => {
         if (mutate) {
@@ -759,19 +770,21 @@ const WrappedUser = compose(
               {
                 query: userQuery,
                 variables: {
-                  id: userId
-                }
-              }
-            ]
+                  id: userId,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(updateAdminNotesMutation, {
     props: ({
       mutate,
-      ownProps: { params: { userId } }
+      ownProps: {
+        params: { userId },
+      },
     }) => ({
       updateAdminNotes: ({ notes }) => {
         if (mutate) {
@@ -781,77 +794,83 @@ const WrappedUser = compose(
               {
                 query: userQuery,
                 variables: {
-                  id: userId
-                }
-              }
-            ]
+                  id: userId,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(moveMembershipMutation, {
     props: ({
       mutate,
-      ownProps: { params: { userId } }
+      ownProps: {
+        params: { userId },
+      },
     }) => ({
       moveMembership: ({
         membershipId,
-        userId: newUserId
+        userId: newUserId,
       }) => {
         if (mutate) {
           return mutate({
             variables: {
               membershipId,
-              userId: newUserId
+              userId: newUserId,
             },
             refetchQueries: [
               {
                 query: userQuery,
                 variables: {
-                  id: userId
-                }
-              }
-            ]
+                  id: userId,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(cancelMembershipMutation, {
     props: ({
       mutate,
-      ownProps: { params: { userId } }
+      ownProps: {
+        params: { userId },
+      },
     }) => ({
       cancelMembership: ({
         membershipId,
         reason,
-        immediately
+        immediately,
       }) => {
         if (mutate) {
           return mutate({
             variables: {
               id: membershipId,
               reason,
-              immediately
+              immediately,
             },
             refetchQueries: [
               {
                 query: userQuery,
                 variables: {
-                  id: userId
-                }
-              }
-            ]
+                  id: userId,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(reactivateMembershipMutation, {
     props: ({
       mutate,
-      ownProps: { params: { userId } }
+      ownProps: {
+        params: { userId },
+      },
     }) => ({
       reactivateMembership: ({ id }) => {
         if (mutate) {
@@ -862,20 +881,22 @@ const WrappedUser = compose(
                 {
                   query: userQuery,
                   variables: {
-                    id: userId
-                  }
-                }
+                    id: userId,
+                  },
+                },
               ]
-            }
+            },
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(generateMembershipMutation, {
     props: ({
       mutate,
-      ownProps: { params: { userId } }
+      ownProps: {
+        params: { userId },
+      },
     }) => ({
       generateMembership: () => {
         if (mutate) {
@@ -886,15 +907,15 @@ const WrappedUser = compose(
                 {
                   query: userQuery,
                   variables: {
-                    id: userId
-                  }
-                }
+                    id: userId,
+                  },
+                },
               ]
-            }
+            },
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(userMutation, {
     props: ({ mutate }) => ({
@@ -906,19 +927,21 @@ const WrappedUser = compose(
               {
                 query: userQuery,
                 variables: {
-                  id: variables.id
-                }
-              }
-            ]
+                  id: variables.id,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(sendPaymentRemindersMutation, {
     props: ({
       mutate,
-      ownProps: { params: { userId } }
+      ownProps: {
+        params: { userId },
+      },
     }) => ({
       sendPaymentReminders: ({ paymentIds }) => {
         if (mutate) {
@@ -928,19 +951,21 @@ const WrappedUser = compose(
               {
                 query: userQuery,
                 variables: {
-                  id: userId
-                }
-              }
-            ]
+                  id: userId,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(resolvePledgeToPaymentMutation, {
     props: ({
       mutate,
-      ownProps: { params: { userId } }
+      ownProps: {
+        params: { userId },
+      },
     }) => ({
       resolvePledgeToPayment: variables => {
         if (mutate) {
@@ -950,19 +975,21 @@ const WrappedUser = compose(
               {
                 query: userQuery,
                 variables: {
-                  id: userId
-                }
-              }
-            ]
+                  id: userId,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(updatePaymentMutation, {
     props: ({
       mutate,
-      ownProps: { params: { userId } }
+      ownProps: {
+        params: { userId },
+      },
     }) => ({
       updatePayment: variables => {
         if (mutate) {
@@ -972,19 +999,21 @@ const WrappedUser = compose(
               {
                 query: userQuery,
                 variables: {
-                  id: userId
-                }
-              }
-            ]
+                  id: userId,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(cancelPledgeMutation, {
     props: ({
       mutate,
-      ownProps: { params: { userId } }
+      ownProps: {
+        params: { userId },
+      },
     }) => ({
       cancelPledge: variables => {
         if (mutate) {
@@ -994,23 +1023,23 @@ const WrappedUser = compose(
               {
                 query: userQuery,
                 variables: {
-                  id: userId
-                }
-              }
-            ]
+                  id: userId,
+                },
+              },
+            ],
           })
         }
-      }
-    })
+      },
+    }),
   }),
   graphql(userQuery, {
     options: ({ params: { userId } }) => {
       return {
         variables: {
-          id: userId
-        }
+          id: userId,
+        },
       }
-    }
+    },
   })
 )(Detail)
 

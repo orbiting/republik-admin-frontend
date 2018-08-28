@@ -265,7 +265,12 @@ export default class PostfinancePaymentsList extends Component {
                 items.length > 0 && (
                   <TableBody
                     fields={table}
-                    items={items}
+                    items={
+                      items
+                      //   .filter(
+                      //   v => !v.hidden
+                      // )
+                    }
                     renderField={
                       innerRenderTableField
                     }

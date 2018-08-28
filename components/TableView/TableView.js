@@ -60,7 +60,7 @@ const List = props => {
         stringArray: !disabledFilters.stringArray
           ? stringArray
           : null,
-        boolean: !disabledFilters.boolean
+        bool: !disabledFilters.boolean
           ? boolean
           : null,
       }}

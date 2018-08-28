@@ -8,9 +8,6 @@ import moment from 'moment'
 
 import { tableView as styles } from '../styles'
 
-const standardDate = rawDate =>
-  moment(rawDate).format('YYYY-MM-DD')
-
 const localDate = rawDate =>
   moment(rawDate).format('YYYY-MM-DD')
 
@@ -20,8 +17,8 @@ export default class DateRangeFilter extends Component {
 
     this.state = this.props.dateRange || {
       field: this.props.fields[0],
-      from: standardDate('2017-04-20'),
-      to: standardDate({}),
+      from: '',
+      to: '',
     }
 
     this.handleSelectedField = event => {
@@ -110,6 +107,7 @@ export default class DateRangeFilter extends Component {
               name="startDate"
               label="From"
               value={from}
+              isFocused={true}
               type="date"
               renderInput={props => (
                 <input
@@ -128,6 +126,7 @@ export default class DateRangeFilter extends Component {
               name="endDate"
               label="Until"
               value={to}
+              isFocused={true}
               type="date"
               renderInput={props => (
                 <input

@@ -4,6 +4,8 @@ import {
   A,
   colors,
 } from '@project-r/styleguide'
+import { ErrorMessage } from '../ErrorMessage'
+import { TableMessage } from '../TableView'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { css } from 'glamor'
@@ -14,6 +16,7 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    position: 'relative',
   }),
   button: css({
     cursor: 'pointer',
@@ -21,6 +24,10 @@ const styles = {
       cursor: 'default',
       color: colors.disabled,
     },
+  }),
+  error: css({
+    position: 'absolute',
+    bottom: 0,
   }),
 }
 
@@ -57,7 +64,7 @@ export default ({
       >
         {(
           hidePostfinancePayment,
-          { loading }
+          { loading, error }
         ) => (
           <span {...styles.option}>
             <A
@@ -71,8 +78,19 @@ export default ({
               {'Hide'}
             </A>
             {loading && (
-              <InlineSpinner size={'22px'} />
+              <InlineSpinner size={'16px'} />
             )}
+            {!loading &&
+              error && (
+                <Message>
+                  {({ confirm }) => (
+                    <ErrorMessage
+                      error={error}
+                      confirm={confirm}
+                    />
+                  )}
+                </Message>
+              )}
           </span>
         )}
       </Mutation>
@@ -85,7 +103,7 @@ export default ({
       >
         {(
           manuallyMatchPostfinancePayment,
-          { loading }
+          { loading, error }
         ) => (
           <span {...styles.option}>
             <A
@@ -101,6 +119,17 @@ export default ({
             {loading && (
               <InlineSpinner size={'22px'} />
             )}
+            {!loading &&
+              error && (
+                <TableMessage>
+                  {({ confirm }) => (
+                    <ErrorMessage
+                      error={error}
+                      confirm={confirm}
+                    />
+                  )}
+                </TableMessage>
+              )}
           </span>
         )}
       </Mutation>

@@ -6,6 +6,7 @@ import {
 } from '@project-r/styleguide'
 import { Table, Row, Cell } from '../Layout/Table'
 import SortIndicator from './SortIndicator'
+import { Container as MessageContainer } from './TableMessages'
 
 import { tableView as tableViewStyles } from '../styles'
 
@@ -103,12 +104,18 @@ export default class TabledHead extends Component {
 
   render() {
     return (
-      <Sticky scrollElement="#content">
-        <Table>
-          <Row {...tableViewStyles.thead}>
-            {this.renderFields()}
-          </Row>
-        </Table>
+      <Sticky
+        scrollElement="#content"
+        stickyStyle={{ zIndex: 5000 }}
+      >
+        <div style={{ zIndex: 3000 }}>
+          <MessageContainer />
+          <Table>
+            <Row {...tableViewStyles.thead}>
+              {this.renderFields()}
+            </Row>
+          </Table>
+        </div>
       </Sticky>
     )
   }
