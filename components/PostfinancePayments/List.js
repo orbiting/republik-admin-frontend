@@ -3,6 +3,7 @@ import gql from 'graphql-tag'
 import {
   Spinner,
   Label,
+  Interaction,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { chfFormat } from '../../lib/utils/formats'
@@ -201,6 +202,7 @@ export default class PostfinancePaymentsList extends Component {
           updateOrderBy,
           toggleFilter,
         }) => {
+          items = items.filter(v => v.hidden)
           const innerRenderTableField = fieldName => {
             switch (fieldName) {
               case 'mitteilung':
@@ -257,7 +259,11 @@ export default class PostfinancePaymentsList extends Component {
               {loading && !items && <Spinner />}
               {items &&
                 !items.length && (
-                  <Interaction.P>
+                  <Interaction.P
+                    style={{
+                      margin: '20px auto 0 auto',
+                    }}
+                  >
                     No results.
                   </Interaction.P>
                 )}
@@ -265,9 +271,7 @@ export default class PostfinancePaymentsList extends Component {
                 items.length > 0 && (
                   <TableBody
                     fields={table}
-                    items={items.filter(
-                      v => !v.hidden
-                    )}
+                    items={items}
                     renderField={
                       innerRenderTableField
                     }

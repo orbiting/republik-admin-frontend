@@ -5,6 +5,7 @@ import {
   A,
   colors,
   Label,
+  Interaction,
 } from '@project-r/styleguide'
 
 import { chfFormat } from '../../lib/utils/formats'
@@ -271,7 +272,11 @@ export default () => (
           {loading && !items && <Spinner />}
           {items &&
             !items.length && (
-              <Interaction.P>
+              <Interaction.P
+                style={{
+                  margin: '20px auto 0 auto',
+                }}
+              >
                 No results.
               </Interaction.P>
             )}

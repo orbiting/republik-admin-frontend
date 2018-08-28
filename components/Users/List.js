@@ -172,7 +172,11 @@ export default class UsersList extends Component {
               {loading && !items && <Spinner />}
               {items &&
                 !items.length && (
-                  <Interaction.P>
+                  <Interaction.P
+                    style={{
+                      margin: '20px auto 0 auto',
+                    }}
+                  >
                     No results.
                   </Interaction.P>
                 )}
