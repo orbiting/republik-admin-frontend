@@ -1,4 +1,6 @@
-# Republik Admin Frontend
+# [DEPRECATED] Republik Admin Frontend
+
+⚠️ This repository together with others has been merged into the [republik/plattform](https://github.com/republik/plattform) monorepo. Let's continue the journey there. ⚠️
 
 ## Usage
 
